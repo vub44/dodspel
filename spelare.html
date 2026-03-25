@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DoD Karaktärsblad v10.0 - Online</title>
+    <title>DoD Karaktärsblad v11.0 - Online</title>
     <style>
         :root {
             --bg-color: #121212;
             --card-bg: rgba(40, 40, 40, 0.92);
             --text-color: #f0f0f0;
             --accent-color: #4ca300;
+            --crit-color: #ffcc00;
+            --fail-color: #ff4444;
         }
 
         * { box-sizing: border-box; }
@@ -17,12 +19,9 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: var(--text-color);
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('dragonbane_banner.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background-size: cover; background-position: center; background-attachment: fixed;
             background-color: var(--bg-color);
         }
 
@@ -43,14 +42,10 @@
 
         /* --- DESIGN --- */
         .page-header { text-align: center; padding: 70px 20px 10px; text-shadow: 2px 2px 8px rgba(0,0,0,1); }
-        .page-header h1 { margin: 0; font-size: 2.2rem; letter-spacing: 2px; }
-        .page-header h2 { margin: 5px 0 0; color: var(--accent-color); font-size: 1.1rem; text-transform: uppercase; }
-
         .container {
             max-width: 900px; margin: 0 auto 180px auto; 
             background: var(--card-bg); border: 1px solid var(--accent-color);
-            border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-            padding: 25px; backdrop-filter: blur(8px);
+            border-radius: 12px; padding: 25px; backdrop-filter: blur(8px);
         }
 
         .section { background: rgba(20, 20, 20, 0.5); padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid var(--accent-color); }
@@ -59,27 +54,21 @@
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
 
-        @media (max-width: 700px) {
-            .grid-3 { grid-template-columns: 1fr; }
-            .grid-6 { grid-template-columns: repeat(3, 1fr); }
-        }
-
         .input-group { display: flex; flex-direction: column; }
         label { font-size: 0.7rem; color: #aaa; text-transform: uppercase; margin-bottom: 4px; }
-        input[type="text"], input[type="number"] { background: #222; border: 1px solid #444; color: white; padding: 10px; border-radius: 4px; font-size: 1rem; }
+        input[type="text"], input[type="number"], textarea { background: #222; border: 1px solid #444; color: white; padding: 10px; border-radius: 4px; font-size: 1rem; width: 100%; }
 
         .stat-box { background: #111; padding: 10px; border-radius: 6px; text-align: center; border: 1px solid #333; }
         .stat-box input { width: 100%; max-width: 60px; text-align: center; font-size: 1.4rem; font-weight: bold; background: transparent; border: none; border-bottom: 2px solid var(--accent-color); color: white; }
 
         .derived-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-top: 15px; }
         .derived-box { background: rgba(0,0,0,0.4); padding: 10px; border-radius: 6px; text-align: center; border: 1px solid #444; }
-        .derived-val { font-size: 1.4rem; font-weight: bold; color: var(--accent-color); margin-top: 4px; }
+        .derived-val { font-size: 1.4rem; font-weight: bold; color: var(--accent-color); }
 
         .skill-item { display: grid; grid-template-columns: 2fr 45px 45px 45px; align-items: center; background: rgba(255,255,255,0.03); padding: 6px 10px; border-radius: 4px; margin-bottom: 4px; font-size: 0.9rem; }
-        .skill-item-header { font-weight: bold; color: #888; border-bottom: 1px solid #333; margin-bottom: 8px; }
         .skill-val { font-weight: bold; color: var(--accent-color); text-align: center; }
 
-        /* --- NYA FLIK-KNAPPAR SOM STICKER UPP --- */
+        /* --- ACTION TRAY --- */
         .dice-tray {
             position: fixed; bottom: 0; left: 0; right: 0;
             background: rgba(10, 10, 10, 0.98); border-top: 2px solid var(--accent-color);
@@ -96,23 +85,28 @@
             background: #1a1a1a; color: #888; padding: 5px 15px; 
             border: 1px solid var(--accent-color); border-bottom: none;
             border-radius: 8px 8px 0 0; cursor: pointer; font-weight: bold; font-size: 0.75rem;
-            pointer-events: auto; transition: 0.2s;
+            pointer-events: auto;
         }
-        .tray-tab.active { background: var(--accent-color); color: white; padding-top: 8px; margin-top: -3px; }
+        .tray-tab.active { background: var(--accent-color); color: white; }
 
-        /* --- INNEHÅLL I TRAY --- */
-        .tab-content { display: none; width: 100%; max-width: 500px; flex-direction: column; align-items: center; }
+        .tab-content { display: none; width: 100%; max-width: 600px; flex-direction: column; }
         .tab-content.active { display: flex; }
 
-        .dice-result-big { font-size: 1.6rem; font-weight: bold; color: var(--accent-color); margin-bottom: 10px; min-height: 40px; }
+        /* --- INVENTORY STYLES --- */
+        .inv-nav { display: flex; gap: 10px; margin-bottom: 10px; }
+        .inv-btn { flex: 1; padding: 8px; background: #222; border: 1px solid #444; color: #888; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        .inv-btn.active { border-color: var(--accent-color); color: var(--accent-color); }
+        .inv-panel { display: none; }
+        .inv-panel.active { display: block; }
+
+        /* --- DICE STYLES --- */
+        .dice-result-big { font-size: 2rem; font-weight: bold; color: var(--accent-color); margin-bottom: 10px; text-align: center; min-height: 50px; }
         .dice-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; }
         .dice-btn { background: #222; border: 1px solid var(--accent-color); color: white; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        
-        .log-container { width: 100%; max-height: 130px; overflow-y: auto; font-size: 0.85rem; }
-        .log-entry { padding: 6px 10px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; }
-        .log-perfect { color: #ffd700; font-weight: bold; }
-        .log-fail { color: #ff4444; font-weight: bold; }
-        .quick-stats { display: flex; justify-content: center; gap: 25px; font-weight: bold; font-size: 1.2rem; padding: 15px; color: var(--accent-color); }
+        .log-container { width: 100%; max-height: 150px; overflow-y: auto; background: #000; border-radius: 5px; }
+        .log-entry { padding: 8px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; }
+
+        @media (max-width: 600px) { .grid-6 { grid-template-columns: repeat(3, 1fr); } .grid-3 { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -126,20 +120,18 @@
             <input type="text" id="roomName" class="room-input" placeholder="Rumsnamn..." value="MittRum">
             <button id="connectBtn" style="background: var(--accent-color); border: none; color: white; padding: 10px; border-radius: 20px; cursor: pointer; font-weight: bold;">Anslut till Rum</button>
             <div class="user-list" id="userList">Anslutna: -</div>
-            <div style="text-align: center; margin-top: 5px;"><a href="index.html" class="nav-link">🏠 Till Huvudmeny</a></div>
         </div>
     </div>
 
     <div class="page-header">
         <h1>⚔️ Drakar och Demoner</h1>
-        <h2>Digitalt Karaktärsblad</h2>
     </div>
 
     <div class="container">
         <div class="section grid-3">
-            <div class="input-group"><label>Namn</label><input type="text" id="charName" class="save-field" placeholder="Namn"></div>
-            <div class="input-group"><label>Släkte</label><input type="text" id="kin" class="save-field" placeholder="Släkte"></div>
-            <div class="input-group"><label>Yrke</label><input type="text" id="profession" class="save-field" placeholder="Yrke"></div>
+            <div class="input-group"><label>Namn</label><input type="text" id="charName" class="save-field"></div>
+            <div class="input-group"><label>Släkte</label><input type="text" id="kin" class="save-field"></div>
+            <div class="input-group"><label>Yrke</label><input type="text" id="profession" class="save-field"></div>
         </div>
 
         <div class="section">
@@ -156,45 +148,36 @@
                 <div class="derived-box"><label>Max KP</label><div id="out-kp" class="derived-val">10</div></div>
                 <div class="derived-box"><label>Max VP</label><div id="out-vp" class="derived-val">10</div></div>
                 <div class="derived-box"><label>Bärförmåga</label><div id="out-carry" class="derived-val">5</div></div>
-                <div class="derived-box"><label>Bonus STY</label><div id="out-dmg-sty" class="derived-val">-</div></div>
-                <div class="derived-box"><label>Bonus SMI</label><div id="out-dmg-smi" class="derived-val">-</div></div>
             </div>
         </div>
 
-        <div class="skills-container">
-            <div class="section">
-                <h3>Allmänna Färdigheter</h3>
-                <div class="skill-item skill-item-header"><div>Färdighet</div><div>Bas</div><div>Tränad</div><div>Värde</div></div>
-                <div class="skill-item"><div>Dyrka lås (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-lock" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Fingerfärdighet (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-sleight" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Hantverk (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-craft" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Hoppa & Klättra (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-jump" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Kulturkännedom (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-culture" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Läkekonst (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-medicine" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Lärdom (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-lore" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Rida (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-ride" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Sjökunnighet (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-sea" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Smyga (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-stealth" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Undvika (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-dodge" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Uppmärksamhet (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-spot" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Överlevnad (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-survive" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Övertala (KAR)</div><div class="skill-base" data-attr="kar">3</div><input type="checkbox" id="t-persuade" class="save-field"><div class="skill-val">3</div></div>
-            </div>
-
-            <div class="section">
-                <h3>Vapenfärdigheter</h3>
-                <div class="skill-item skill-item-header"><div>Färdighet</div><div>Bas</div><div>Tränad</div><div>Värde</div></div>
-                <div class="skill-item"><div>Armborst (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-xbow" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Båge (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-bow" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Kastvapen (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-throw" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Klubba (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-mace" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Kniv (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-knife" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Sköld (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-shield" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Slagsmål (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-brawl" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Spjut (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-spear" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Svärd (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-sword" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Yxa (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-axe" class="save-field"><div class="skill-val">3</div></div>
-            </div>
+        <div class="section">
+            <h3>Färdigheter</h3>
+            <div class="skill-item" style="font-weight:bold; color:#888; border:none"><div>Färdighet</div><div>Bas</div><div>T</div><div>V</div></div>
+            <div class="skill-item"><div>Dyrka lås (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-lock" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Fingerfärdighet (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-sleight" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Hantverk (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-craft" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Hoppa & Klättra (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-jump" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Kulturkännedom (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-culture" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Läkekonst (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-medicine" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Lärdom (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-lore" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Rida (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-ride" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Sjökunnighet (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-sea" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Smyga (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-stealth" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Undvika (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-dodge" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Uppmärksamhet (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-spot" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Överlevnad (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-survive" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Övertala (KAR)</div><div class="skill-base" data-attr="kar">3</div><input type="checkbox" id="t-persuade" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Armborst (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-xbow" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Båge (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-bow" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Kastvapen (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-throw" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Klubba (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-mace" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Kniv (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-knife" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Sköld (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-shield" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Slagsmål (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-brawl" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Spjut (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-spear" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Svärd (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-sword" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Yxa (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-axe" class="save-field"><div class="skill-val">3</div></div>
         </div>
     </div>
 
@@ -202,12 +185,12 @@
         <div class="tray-tabs">
             <div class="tray-tab" id="tab-btn-dice" onclick="openTray('dice')">🎲 TÄRNINGAR</div>
             <div class="tray-tab" id="tab-btn-log" onclick="openTray('log')">📜 LOGG</div>
-            <div class="tray-tab" id="tab-btn-status" onclick="openTray('status')">🛡️ STATUS</div>
+            <div class="tray-tab" id="tab-btn-inv" onclick="openTray('inv')">🎒 RYGGSÄCK</div>
             <div class="tray-tab" onclick="document.getElementById('actionTray').classList.add('minimized')" style="background:#333; color:#fff">✖</div>
         </div>
     
         <div id="content-dice" class="tab-content">
-            <div id="dice-result" class="dice-result-big">Slå en tärning</div>
+            <div id="dice-result" class="dice-result-big">Klar</div>
             <div class="dice-buttons">
                 <button class="dice-btn" onclick="rollDice(4)">T4</button>
                 <button class="dice-btn" onclick="rollDice(6)">T6</button>
@@ -222,19 +205,23 @@
             <div id="dice-history-list" class="log-container"></div>
         </div>
     
-        <div id="content-status" class="tab-content">
-            <div class="quick-stats">
-                <div>❤️ <span id="stat-kp">0</span></div>
-                <div>✨ <span id="stat-vp">0</span></div>
-                <div>🎒 <span id="stat-carry">0</span></div>
+        <div id="content-inv" class="tab-content">
+            <div class="inv-nav">
+                <button class="inv-btn active" id="btn-sub-weapons" onclick="showInvPanel('weapons')">Vapen</button>
+                <button class="inv-btn" id="btn-sub-items" onclick="showInvPanel('items')">Inventarie</button>
             </div>
-            <button onclick="document.getElementById('actionTray').classList.add('minimized')" style="background:none; border:1px solid #444; color:#888; padding:5px; border-radius:5px; margin-top:10px; cursor:pointer">Stäng meny</button>
+            <div id="panel-weapons" class="inv-panel active">
+                <textarea id="inv-weapons" class="save-field" placeholder="Namn - Skada - Egenskap..." style="height:100px;"></textarea>
+            </div>
+            <div id="panel-items" class="inv-panel">
+                <textarea id="inv-items" class="save-field" placeholder="Föremål och utrustning..." style="height:100px;"></textarea>
+            </div>
         </div>
     </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-    import { getDatabase, ref, push, onChildAdded, onValue, serverTimestamp, query, limitToLast, off, set, onDisconnect } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+    import { getDatabase, ref, push, onChildAdded, onValue, serverTimestamp, set, onDisconnect, query, limitToLast } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyApQWEuMm5hCpp174145GgcdUOGEmfO2RU",
@@ -249,130 +236,88 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    const roomInp = document.getElementById('roomName');
-    const charInp = document.getElementById('charName');
-    const statusTxt = document.getElementById('connectionStatus');
-    const userListDiv = document.getElementById('userList');
-    const diceResult = document.getElementById('dice-result');
-    const logList = document.getElementById('dice-history-list');
-    const tray = document.getElementById('actionTray');
-
-    // --- ÖPPNA/STÄNG MENYN VIA FLIKAR ---
+    // --- FUNKTIONER ---
     window.openTray = function(tabName) {
-        const isAlreadyOpen = !tray.classList.contains('minimized');
-        const isActiveTab = document.getElementById('content-' + tabName).classList.contains('active');
-
-        // Om vi klickar på samma flik och den är öppen -> stäng den
-        if (isAlreadyOpen && isActiveTab) {
-            tray.classList.add('minimized');
-            return;
-        }
-
-        // Annars, byt innehåll och se till att den är öppen
+        const tray = document.getElementById('actionTray');
+        const isActive = !tray.classList.contains('minimized') && document.getElementById('content-' + tabName).classList.contains('active');
+        if (isActive) { tray.classList.add('minimized'); return; }
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.querySelectorAll('.tray-tab').forEach(t => t.classList.remove('active'));
-        
         document.getElementById('content-' + tabName).classList.add('active');
         document.getElementById('tab-btn-' + tabName).classList.add('active');
         tray.classList.remove('minimized');
-
-        if(tabName === 'status') {
-            document.getElementById('stat-kp').innerText = document.getElementById('out-kp').innerText;
-            document.getElementById('stat-vp').innerText = document.getElementById('out-vp').innerText;
-            document.getElementById('stat-carry').innerText = document.getElementById('out-carry').innerText;
-        }
     };
 
-    // --- ANSLUTNING ---
-    window.connectToRoom = function() {
-        const room = roomInp.value.trim();
-        const name = charInp.value.trim() || "Anonym";
-        if (!room) return alert("Skriv in rumsnamn!");
+    window.showInvPanel = function(panel) {
+        document.querySelectorAll('.inv-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.inv-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('panel-' + panel).classList.add('active');
+        document.getElementById('btn-sub-' + panel).classList.add('active');
+    };
 
+    window.rollDice = function(sides) {
+        const room = document.getElementById('roomName').value;
+        const name = document.getElementById('charName').value || "Anonym";
+        if (!document.getElementById('connectionStatus').innerText.includes("🟢")) return alert("Anslut först!");
+        const res = Math.floor(Math.random() * sides) + 1;
+        push(ref(db, `rooms/${room}/rolls`), { user: name, dice: `T${sides}`, val: res, ts: serverTimestamp() });
+    };
+
+    // --- FIREBASE LOGIK ---
+    window.connectToRoom = function() {
+        const room = document.getElementById('roomName').value;
+        const name = document.getElementById('charName').value || "Anonym";
         set(ref(db, `rooms/${room}/users/${name}`), true);
         onDisconnect(ref(db, `rooms/${room}/users/${name}`)).remove();
 
-        onValue(ref(db, `rooms/${room}/users`), (snap) => {
-            const users = snap.val() ? Object.keys(snap.val()) : [];
-            userListDiv.innerHTML = "Anslutna: " + users.map(u => `<span class="user-badge">${u}</span>`).join('');
+        onValue(ref(db, `rooms/${room}/users`), (s) => {
+            const users = s.val() ? Object.keys(s.val()) : [];
+            document.getElementById('userList').innerHTML = users.map(u => `<span class="user-badge">${u}</span>`).join('');
         });
 
-        onChildAdded(query(ref(db, `rooms/${room}/rolls`), limitToLast(20)), (snap) => {
-            const data = snap.val();
+        onChildAdded(query(ref(db, `rooms/${room}/rolls`), limitToLast(20)), (s) => {
+            const data = s.val();
+            let icon = "";
+            if (data.dice === "T20") {
+                if (data.val === 1) icon = " 🔥";
+                if (data.val === 20) icon = " 💀";
+            }
             const entry = document.createElement('div');
             entry.className = 'log-entry';
-            let spec = "";
-            if (data.dice === "T20" && data.val === 1) spec = "log-perfect";
-            if (data.dice === "T20" && data.val === 20) spec = "log-fail";
-            entry.innerHTML = `<span><strong>${data.user}</strong> (${data.dice})</span><span class="${spec}">${data.val}</span>`;
-            logList.insertBefore(entry, logList.firstChild);
-            diceResult.innerText = `${data.user}: ${data.val}`;
+            entry.innerHTML = `<span><strong>${data.user}</strong> slår ${data.dice}</span><span style="font-size:1.2rem; font-weight:bold">${data.val}${icon}</span>`;
+            const list = document.getElementById('dice-history-list');
+            list.insertBefore(entry, list.firstChild);
+            document.getElementById('dice-result').innerHTML = `${data.user}: ${data.val}${icon}`;
         });
 
-        statusTxt.innerText = `🟢 Rum: ${room}`;
-        statusTxt.style.color = "#4ca300";
-        window.syncSheetToFirebase();
+        document.getElementById('connectionStatus').innerText = "🟢 Rum: " + room;
         document.getElementById('roomMenu').classList.remove('open');
     };
 
     document.getElementById('connectBtn').onclick = connectToRoom;
 
-    // --- TÄRNINGAR ---
-    window.rollDice = function(sides) {
-        const name = charInp.value.trim() || "Anonym";
-        const room = roomInp.value.trim();
-        if (!statusTxt.innerText.includes("🟢")) return alert("Anslut först!");
-        const result = Math.floor(Math.random() * sides) + 1;
-        push(ref(db, `rooms/${room}/rolls`), { user: name, dice: `T${sides}`, val: result, timestamp: serverTimestamp() });
-    };
-
-    // --- BERÄKNINGAR ---
+    // --- KALKYLERING & AUTO-SPARA ---
     function calculate() {
-        const getV = (id) => parseInt(document.getElementById(id).value) || 0;
-        const attr = { sty:getV('sty'), fys:getV('fys'), smi:getV('smi'), int:getV('int'), psy:getV('psy'), kar:getV('kar') };
+        const v = (id) => parseInt(document.getElementById(id).value) || 0;
+        document.getElementById('out-kp').innerText = v('fys');
+        document.getElementById('out-vp').innerText = v('psy');
+        document.getElementById('out-carry').innerText = Math.ceil(v('sty') / 2);
         
-        document.getElementById('out-kp').innerText = attr.fys;
-        document.getElementById('out-vp').innerText = attr.psy;
-        document.getElementById('out-carry').innerText = Math.ceil(attr.sty / 2);
-        
-        const getBonus = (v) => v <= 12 ? "-" : (v <= 15 ? "+T4" : "+T6");
-        document.getElementById('out-dmg-sty').innerText = getBonus(attr.sty);
-        document.getElementById('out-dmg-smi').innerText = getBonus(attr.smi);
-    
-        document.querySelectorAll('.skill-item:not(.skill-item-header)').forEach(row => {
-            const bSpan = row.querySelector('.skill-base');
-            const vDiv = row.querySelector('.skill-val');
+        document.querySelectorAll('.skill-item:not([style*="bold"])').forEach(row => {
+            const baseSpan = row.querySelector('.skill-base');
+            const valDiv = row.querySelector('.skill-val');
             const cb = row.querySelector('input[type="checkbox"]');
-            if (bSpan && vDiv && cb) {
-                const base = Math.max(3, Math.min(7, Math.floor((attr[bSpan.dataset.attr] - 1) / 3) + 2));
-                bSpan.innerText = base;
-                vDiv.innerText = cb.checked ? base * 2 : base;
-            }
+            const attrVal = v(baseSpan.dataset.attr);
+            const base = Math.max(3, Math.min(7, Math.floor((attrVal - 1) / 3) + 2));
+            baseSpan.innerText = base;
+            valDiv.innerText = cb.checked ? base * 2 : base;
         });
-        window.syncSheetToFirebase();
     }
 
-    window.syncSheetToFirebase = function() {
-        const room = roomInp.value.trim();
-        const charName = charInp.value.trim() || "Anonym";
-        if (room && statusTxt.innerText.includes("🟢")) {
-            set(ref(db, `rooms/${room}/sheets/${charName}`), {
-                kp: document.getElementById('out-kp').innerText,
-                vp: document.getElementById('out-vp').innerText,
-                profession: document.getElementById('profession').value,
-                lastUpdate: serverTimestamp()
-            });
-        }
-    };
-
-    // --- INIT ---
     document.querySelectorAll('.save-field').forEach(f => {
         const saved = localStorage.getItem(f.id);
         if (saved !== null) { if (f.type === 'checkbox') f.checked = saved === 'true'; else f.value = saved; }
-        f.addEventListener('input', () => {
-            localStorage.setItem(f.id, f.type === 'checkbox' ? f.checked : f.value);
-            calculate();
-        });
+        f.oninput = () => { localStorage.setItem(f.id, f.type === 'checkbox' ? f.checked : f.value); calculate(); };
     });
 
     calculate();
