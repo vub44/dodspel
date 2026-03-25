@@ -232,6 +232,9 @@
         });
 
         statusTxt.innerText = `🟢 Rum: ${room}`;
+        window.syncSheetToFirebase(); 
+    
+        document.getElementById('roomMenu').classList.remove('open');
         statusTxt.style.color = "#4ca300";
         document.getElementById('roomMenu').classList.remove('open');
     };
@@ -261,53 +264,57 @@
         const getV = (id) => parseInt(document.getElementById(id).value) || 0;
         const attr = { sty:getV('sty'), fys:getV('fys'), smi:getV('smi'), int:getV('int'), psy:getV('psy'), kar:getV('kar') };
         
+        // Grundegenskaper och bärförmåga
         document.getElementById('out-kp').innerText = attr.fys;
         document.getElementById('out-vp').innerText = attr.psy;
         document.getElementById('out-carry').innerText = Math.ceil(attr.sty / 2);
         
+        // Skadebonus
         const getBonus = (v) => v <= 12 ? "-" : (v <= 15 ? "+T4" : "+T6");
         document.getElementById('out-dmg-sty').innerText = getBonus(attr.sty);
         document.getElementById('out-dmg-smi').innerText = getBonus(attr.smi);
-
+    
+        // Färdigheter
         document.querySelectorAll('.skill-item:not(.skill-item-header)').forEach(row => {
             const bSpan = row.querySelector('.skill-base');
             const vDiv = row.querySelector('.skill-val');
             const cb = row.querySelector('input[type="checkbox"]');
             if (bSpan && vDiv && cb) {
+                // Beräkna basvärde enligt DoD-regler
                 const base = Math.max(3, Math.min(7, Math.floor((attr[bSpan.dataset.attr] - 1) / 3) + 2));
                 bSpan.innerText = base;
                 vDiv.innerText = cb.checked ? base * 2 : base;
             }
         });
         
+        // SYNKRUERING TILL FIREBASE
+        // Vi kollar om statusTxt finns och är grön innan vi försöker synka
+        const statusTxt = document.getElementById('connectionStatus');
+        if (statusTxt && statusTxt.innerText.includes("🟢")) {
+            // Om du har skapat syncSheetToFirebase-funktionen använder vi den:
+            if (window.syncSheetToFirebase) {
+                window.syncSheetToFirebase();
+            } 
+        }
+    }
+
+    window.syncSheetToFirebase = function() {
         const room = document.getElementById('roomName').value.trim();
         const charName = document.getElementById('charName').value.trim() || "Anonym";
         
+        // Kontrollera att vi faktiskt är anslutna (statusen bör vara grön)
         if (room && statusTxt.innerText.includes("🟢")) {
             const sheetRef = ref(db, `rooms/${room}/sheets/${charName}`);
-            const sheetData = {
-                kp: document.getElementById('out-kp').innerText,
-                vp: document.getElementById('out-vp').innerText,
-                profession: document.getElementById('profession').value,
-                // Lägg till fler fält här efter hand!
-                lastUpdate: serverTimestamp()
-            };
-            set(sheetRef, sheetData);
-        }
-        // Kontrollera om vi är anslutna till ett rum innan vi skickar
-        const roomName = document.getElementById('roomName').value.trim();
-        if (roomName && typeof db !== 'undefined') {
-            const charName = document.getElementById('charName').value.trim() || "Anonym";
-            const sheetRef = ref(db, `rooms/${roomName}/sheets/${charName}`);
             
             set(sheetRef, {
                 kp: document.getElementById('out-kp').innerText,
                 vp: document.getElementById('out-vp').innerText,
                 profession: document.getElementById('profession').value,
-                timestamp: serverTimestamp()
+                lastUpdate: serverTimestamp()
             });
+            console.log("Karaktärsblad synkat!");
         }
-    }
+    };
 
     fields.forEach(f => {
         const saved = localStorage.getItem(f.id);
