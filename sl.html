@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DoD Spelledarskärm v1.2</title>
     <style>
+        .room-dropdown {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 4000;
+            background: rgba(0, 0, 0, 0.95); border-bottom: 1px solid var(--accent-color);
+            transition: max-height 0.3s ease-in-out; max-height: 50px; overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        .room-dropdown.open { max-height: 250px; }
+        .room-header { height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; cursor: pointer; }
+        .room-content { padding: 10px 20px 20px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #333; }
+        
+        .user-list { font-size: 0.75rem; color: #888; margin-top: 5px; }
+        .user-badge { display: inline-block; background: #222; padding: 2px 8px; border-radius: 10px; margin: 2px; border: 1px solid #444; color: var(--accent-color); }
+        
+        .room-input {
+            background: #111; border: 1px solid var(--accent-color); color: white;
+            padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; outline: none;
         * { box-sizing: border-box; }
         :root {
             --bg-color: #121212;
@@ -145,7 +161,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-        import { getDatabase, ref, push, onChildAdded, onValue, serverTimestamp, set, onDisconnect } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+        import { getDatabase, ref, push, onChildAdded, onValue, serverTimestamp, set, onDisconnect, off } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
     
         const firebaseConfig = {
             apiKey: "AIzaSyApQWEuMm5hCpp174145GgcdUOGEmfO2RU",
@@ -158,29 +174,53 @@
     
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        const room = "MittRum"; // Du kan göra detta dynamiskt senare
     
-        // --- ANSLUTNING ---
-        const myPresenceRef = ref(db, `rooms/${room}/users/Spelledare`);
-        set(myPresenceRef, { role: "GM", online: true });
-        onDisconnect(myPresenceRef).remove();
-    
-        // --- LYSSNA PÅ TÄRNINGSSLAG ---
+        const roomInp = document.getElementById('roomName');
+        const statusTxt = document.getElementById('connectionStatus');
+        const userListDiv = document.getElementById('userList');
         const diceLog = document.getElementById('dice-history');
         const diceResult = document.getElementById('dice-result');
-        const rollsRef = ref(db, `rooms/${room}/rolls`);
     
-        onChildAdded(rollsRef, (snapshot) => {
-            const data = snapshot.val();
-            diceLog.innerText = `Logg: ${data.user} slog ${data.dice}`;
-            diceResult.innerText = `${data.user}: ${data.val}`;
-            // Liten visuell effekt
-            diceResult.style.color = "#ffcc00";
-            setTimeout(() => { diceResult.style.color = "var(--accent-color)"; }, 500);
-        });
+        let currentRollsRef = null;
     
-        // --- SLÅ TÄRNING SOM SL ---
+        window.connectToRoom = function() {
+            const room = roomInp.value.trim();
+            if (!room) return alert("Skriv in rumsnamn!");
+    
+            // Städa upp gamla lyssnare om man byter rum
+            if (currentRollsRef) off(currentRollsRef);
+    
+            // 1. Markera SL som online
+            const myPresenceRef = ref(db, `rooms/${room}/users/Spelledare`);
+            set(myPresenceRef, { role: "GM", online: true });
+            onDisconnect(myPresenceRef).remove();
+    
+            // 2. Lyssna på vilka spelare som är anslutna
+            onValue(ref(db, `rooms/${room}/users`), (snapshot) => {
+                const users = snapshot.val() ? Object.keys(snapshot.val()) : [];
+                userListDiv.innerHTML = "Anslutna: " + users.map(u => `<span class="user-badge" style="display:inline-block; background:#222; padding:2px 8px; border-radius:10px; margin:2px; border:1px solid #444; color:#4ca300; font-size:0.8rem;">${u}</span>`).join('');
+            });
+    
+            // 3. Lyssna på alla tärningsslag i rummet
+            const rollsRef = ref(db, `rooms/${room}/rolls`);
+            onChildAdded(rollsRef, (snapshot) => {
+                const data = snapshot.val();
+                diceLog.innerText = `Logg: ${data.user} slog ${data.dice}`;
+                diceResult.innerText = `${data.user}: ${data.val}`;
+            });
+    
+            statusTxt.innerText = `🟢 Hanterar Rum: ${room}`;
+            statusTxt.style.color = "#4ca300";
+            document.getElementById('roomMenu').classList.remove('open');
+        };
+    
+        document.getElementById('connectBtn').onclick = connectToRoom;
+    
+        // SL:s egna tärningsslag
         window.rollDice = function(sides) {
+            const room = roomInp.value.trim();
+            if (!statusTxt.innerText.includes("Hanterar")) return alert("Anslut till ett rum först!");
+            
             const result = Math.floor(Math.random() * sides) + 1;
             push(ref(db, `rooms/${room}/rolls`), {
                 user: "Spelledaren",
@@ -190,7 +230,6 @@
             });
         };
     
-        // Gör funktionerna tillgängliga för knapparna
         window.toggleDice = () => document.getElementById('diceTray').classList.toggle('minimized');
     </script>
 </body>
