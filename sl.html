@@ -232,7 +232,7 @@
             
                 Object.keys(players).forEach(name => {
                     const data = players[name];
-                    const playerCard = document.title = `
+                    const playerCard = `
                         <div class="monster-box" style="min-width: 150px; border-color: var(--accent-color); background: rgba(76, 163, 0, 0.05);">
                             <strong style="color: var(--accent-color); display: block; border-bottom: 1px solid #333; margin-bottom: 5px;">${name}</strong>
                             <div style="font-size: 0.9rem;">
@@ -242,6 +242,7 @@
                             </div>
                         </div>
                     `;
+                    // OCH SEN skicka in den i containern:
                     container.insertAdjacentHTML('beforeend', playerCard);
                 });
             });
