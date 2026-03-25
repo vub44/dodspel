@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoD Karaktärsblad v2</title>
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-color: #f0f0f0;
+            --accent-color: #d4af37;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--accent-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        h1, h2, h3 {
+            color: var(--accent-color);
+            text-align: center;
+            margin-top: 0;
+        }
+
+        .section {
+            background: #333;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .grid-6 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        @media (min-width: 600px) {
+            .grid-6 { grid-template-columns: repeat(6, 1fr); }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input {
+            background: #3d3d3d;
+            border: 1px solid #555;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .stat-box {
+            background: #383838;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .stat-box input {
+            width: 50px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        /* Sekundära stats (KP, VP, etc) */
+        .derived-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .derived-box {
+            background: #252525;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            border: 1px solid #444;
+        }
+
+        .derived-val {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-top: 5px;
+        }
+
+        /* Färdigheter */
+        .skills-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .skill-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            align-items: center;
+            background: #3a3a3a;
+            padding: 8px;
+            border-radius: 4px;
+            gap: 10px;
+        }
+
+        .skill-item:nth-child(even) {
+            background: #353535;
+        }
+
+        .skill-val {
+            font-weight: bold;
+            color: var(--accent-color);
+            text-align: center;
+        }
+
+        .save-banner {
+            text-align: center;
+            color: #888;
+            font-size: 0.8rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>⚔️ Drakar och Demoner</h1>
+    <h2>Digitalt Karaktärsblad</h2>
+
+    <div class="section grid-3">
+        <div class="input-group">
+            <label for="charName">Namn</label>
+            <input type="text" id="charName" class="save-field" placeholder="Bilbo">
+        </div>
+        <div class="input-group">
+            <label for="kin">Släkte</label>
+            <input type="text" id="kin" class="save-field" placeholder="Anka, Alv...">
+        </div>
+        <div class="input-group">
+            <label for="profession">Yrke</label>
+            <input type="text" id="profession" class="save-field" placeholder="Krigare, Tjuv...">
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>Grundegenskaper</h3>
+        <div class="grid-6">
+            <div class="stat-box">
+                <label for="sty">STY</label><br>
+                <input type="number" id="sty" class="save-field attr" value="10">
+            </div>
+            <div class="stat-box">
+                <label for="fys">FYS</label><br>
+                <input type="number" id="fys" class="save-field attr" value="10">
+            </div>
+            <div class="stat-box">
+                <label for="smi">SMI</label><br>
+                <input type="number" id="smi" class="save-field attr" value="10">
+            </div>
+            <div class="stat-box">
+                <label for="int">INT</label><br>
+                <input type="number" id="int" class="save-field attr" value="10">
+            </div>
+            <div class="stat-box">
+                <label for="psy">PSY</label><br>
+                <input type="number" id="psy" class="save-field attr" value="10">
+            </div>
+            <div class="stat-box">
+                <label for="kar">KAR</label><br>
+                <input type="number" id="kar" class="save-field attr" value="10">
+            </div>
+        </div>
+
+        <div class="derived-stats">
+            <div class="derived-box">
+                <label>Max KP</label>
+                <div id="out-kp" class="derived-val">10</div>
+            </div>
+            <div class="derived-box">
+                <label>Max VP</label>
+                <div id="out-vp" class="derived-val">10</div>
+            </div>
+            <div class="derived-box">
+                <label>Bärförmåga</label>
+                <div id="out-carry" class="derived-val">5</div>
+            </div>
+            <div class="derived-box">
+                <label>Skadebonus (Närstrid)</label>
+                <div id="out-dmg-sty" class="derived-val">-</div>
+            </div>
+            <div class="derived-box">
+                <label>Skadebonus (Avstånd)</label>
+                <div id="out-dmg-smi" class="derived-val">-</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>Färdigheter</h3>
+        <div class="skills-list">
+            <div class="skill-item" style="background: transparent; font-weight: bold; border-bottom: 1px solid #444;">
+                <div>Färdighet</div>
+                <div style="text-align:center;">Grund</div>
+                <div style="text-align:center;">Tränad</div>
+                <div style="text-align:center;">Totalt</div>
+            </div>
+
+            <div class="skill-item">
+                <div>Hoppa & Klättra (SMI)</div>
+                <div class="skill-base" data-attr="smi">5</div>
+                <div style="text-align:center;"><input type="checkbox" class="save-field skill-train" id="train-jump"></div>
+                <div class="skill-val" id="val-jump">5</div>
+            </div>
+
+            <div class="skill-item">
+                <div>Smyga (SMI)</div>
+                <div class="skill-base" data-attr="smi">5</div>
+                <div style="text-align:center;"><input type="checkbox" class="save-field skill-train" id="train-stealth"></div>
+                <div class="skill-val" id="val-stealth">5</div>
+            </div>
+
+            <div class="skill-item">
+                <div>Uppmärksamhet (INT)</div>
+                <div class="skill-base" data-attr="int">5</div>
+                <div style="text-align:center;"><input type="checkbox" class="save-field skill-train" id="train-spot"></div>
+                <div class="skill-val" id="val-spot">5</div>
+            </div>
+
+            <div class="skill-item">
+                <div>Övertala (KAR)</div>
+                <div class="skill-base" data-attr="kar">5</div>
+                <div style="text-align:center;"><input type="checkbox" class="save-field skill-train" id="train-persuade"></div>
+                <div class="skill-val" id="val-persuade">5</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="save-banner">💾 Sidan beräknar och sparar lokalt i webbläsaren automatiskt.</div>
+</div>
+
+<script>
+    // --- 1. SPARA OCH LADDA DATA ---
+    const fields = document.querySelectorAll('.save-field');
+
+    window.addEventListener('load', () => {
+        fields.forEach(field => {
+            const savedValue = localStorage.getItem(field.id);
+            if (savedValue !== null) {
+                if (field.type === 'checkbox') {
+                    field.checked = savedValue === 'true';
+                } else {
+                    field.value = savedValue;
+                }
+            }
+        });
+        calculateEverything(); // Kör beräkningarna direkt vid laddning!
+    });
+
+    fields.forEach(field => {
+        field.addEventListener('input', () => {
+            const val = field.type === 'checkbox' ? field.checked : field.value;
+            localStorage.setItem(field.id, val);
+            calculateEverything(); // Beräkna om när något ändras
+        });
+    });
+
+    // --- 2. REGEL-BERÄKNINGAR ---
+    function calculateEverything() {
+        const sty = parseInt(document.getElementById('sty').value) || 0;
+        const fys = parseInt(document.getElementById('fys').value) || 0;
+        const smi = parseInt(document.getElementById('smi').value) || 0;
+        const int = parseInt(document.getElementById('int').value) || 0;
+        const psy = parseInt(document.getElementById('psy').value) || 0;
+        const kar = parseInt(document.getElementById('kar').value) || 0;
+
+        const attributes = { sty, fys, smi, int, psy, kar };
+
+        // KP och VP
+        document.getElementById('out-kp').innerText = sty; // Max KP = STY
+        document.getElementById('out-vp').innerText = psy; // Max VP = PSY
+
+        // Bärförmåga (STY delat på 2, avrundat uppåt)
+        document.getElementById('out-carry').innerText = Math.ceil(sty / 2);
+
+        // Skadebonus (Baserat på Dragonbanes trösklar: 13-15 = +T4, 16+ = +T6)
+        document.getElementById('out-dmg-sty').innerText = getDamageBonus(sty);
+        document.getElementById('out-dmg-smi').innerText = getDamageBonus(smi);
+
+        // Beräkna färdigheter
+        const skillRows = document.querySelectorAll('.skill-item');
+        skillRows.forEach(row => {
+            const baseSpan = row.querySelector('.skill-base');
+            const totalDiv = row.querySelector('.skill-val');
+            const checkbox = row.querySelector('.skill-train');
+
+            if (baseSpan && totalDiv && checkbox) {
+                const attrType = baseSpan.getAttribute('data-attr');
+                const attrValue = attributes[attrType];
+                
+                // Hämta Grundchans utifrån attributets värde (enligt tabell 3-5=3, 6-8=4, 9-12=5, 13-15=6, 16-18=7)
+                const baseValue = getBaseValue(attrValue);
+                baseSpan.innerText = baseValue;
+
+                // Om tränad: Dubbel grundchans
+                const total = checkbox.checked ? baseValue * 2 : baseValue;
+                totalDiv.innerText = total;
+            }
+        });
+    }
+
+    function getBaseValue(val) {
+        if (val <= 5) return 3;
+        if (val <= 8) return 4;
+        if (val <= 12) return 5;
+        if (val <= 15) return 6;
+        return 7; // För 16-18
+    }
+
+    function getDamageBonus(val) {
+        if (val <= 12) return "-";
+        if (val <= 15) return "+T4";
+        return "+T6";
+    }
+</script>
+
+</body>
+</html>
