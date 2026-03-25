@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DoD Karaktärsblad v9.0 - Online</title>
+    <title>DoD Karaktärsblad v10.0 - Online</title>
     <style>
         :root {
             --bg-color: #121212;
@@ -26,71 +26,40 @@
             background-color: var(--bg-color);
         }
 
-        /* Rum-väljare högst upp */
-        .room-bar {
-            background: rgba(0,0,0,0.85);
-            padding: 10px;
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-            border-bottom: 1px solid var(--accent-color);
-            position: sticky;
-            top: 0;
-            z-index: 3000;
-            backdrop-filter: blur(5px);
+        /* --- NY MOBILVÄNLIG DROPDOWN FÖR RUM --- */
+        .room-dropdown {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 4000;
+            background: rgba(0, 0, 0, 0.95); border-bottom: 1px solid var(--accent-color);
+            transition: max-height 0.3s ease-in-out; max-height: 50px; overflow: hidden;
+            backdrop-filter: blur(10px);
         }
+        .room-dropdown.open { max-height: 250px; }
+        .room-header { height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; cursor: pointer; }
+        .room-content { padding: 10px 20px 20px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #333; }
+        
+        .user-list { font-size: 0.75rem; color: #888; margin-top: 5px; }
+        .user-badge { display: inline-block; background: #222; padding: 2px 8px; border-radius: 10px; margin: 2px; border: 1px solid #444; color: var(--accent-color); }
 
         .room-input {
-            background: #222;
-            border: 1px solid var(--accent-color);
-            color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            outline: none;
+            background: #111; border: 1px solid var(--accent-color); color: white;
+            padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; outline: none;
         }
 
-        .nav-link {
-            color: var(--accent-color);
-            text-decoration: none;
-            font-size: 0.8rem;
-            border: 1px solid var(--accent-color);
-            padding: 4px 12px;
-            border-radius: 20px;
-            transition: 0.2s;
-        }
+        .nav-link { color: var(--accent-color); text-decoration: none; font-size: 0.8rem; }
 
-        .nav-link:hover { background: var(--accent-color); color: white; }
-
-        .page-header {
-            text-align: center;
-            padding: 30px 20px 10px;
-            text-shadow: 2px 2px 8px rgba(0,0,0,1);
-        }
-
+        /* --- BEHÅLL DIN DESIGN --- */
+        .page-header { text-align: center; padding: 70px 20px 10px; text-shadow: 2px 2px 8px rgba(0,0,0,1); }
         .page-header h1 { margin: 0; font-size: 2.2rem; letter-spacing: 2px; }
         .page-header h2 { margin: 5px 0 0; color: var(--accent-color); font-size: 1.1rem; text-transform: uppercase; }
 
         .container {
-            max-width: 900px;
-            margin: 0 auto 160px auto; 
-            background: var(--card-bg);
-            border: 1px solid var(--accent-color);
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-            padding: 25px;
-            backdrop-filter: blur(8px);
+            max-width: 900px; margin: 0 auto 160px auto; 
+            background: var(--card-bg); border: 1px solid var(--accent-color);
+            border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            padding: 25px; backdrop-filter: blur(8px);
         }
 
-        .section {
-            background: rgba(20, 20, 20, 0.5);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--accent-color);
-        }
-
+        .section { background: rgba(20, 20, 20, 0.5); padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid var(--accent-color); }
         h3 { color: var(--accent-color); margin-top: 0; font-size: 1rem; text-transform: uppercase; border-bottom: 1px solid #444; padding-bottom: 5px; }
 
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
@@ -105,58 +74,49 @@
         .input-group { display: flex; flex-direction: column; }
         label { font-size: 0.7rem; color: #aaa; text-transform: uppercase; margin-bottom: 4px; }
         input[type="text"], input[type="number"] {
-            background: #222; border: 1px solid #444; color: white; padding: 10px; 
-            border-radius: 4px; font-size: 1rem; transition: 0.2s;
+            background: #222; border: 1px solid #444; color: white; padding: 10px; border-radius: 4px; font-size: 1rem;
         }
-        input:focus { outline: none; border-color: var(--accent-color); background: #2a2a2a; }
 
         .stat-box { background: #111; padding: 10px; border-radius: 6px; text-align: center; border: 1px solid #333; }
-        .stat-box input { width: 100%; max-width: 60px; text-align: center; font-size: 1.4rem; font-weight: bold; background: transparent; border: none; border-bottom: 2px solid var(--accent-color); border-radius: 0; padding: 2px; }
+        .stat-box input { width: 100%; max-width: 60px; text-align: center; font-size: 1.4rem; font-weight: bold; background: transparent; border: none; border-bottom: 2px solid var(--accent-color); color: white; }
 
         .derived-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-top: 15px; }
         .derived-box { background: rgba(0,0,0,0.4); padding: 10px; border-radius: 6px; text-align: center; border: 1px solid #444; }
         .derived-val { font-size: 1.4rem; font-weight: bold; color: var(--accent-color); margin-top: 4px; }
 
-        .skills-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
         .skill-item { display: grid; grid-template-columns: 2fr 45px 45px 45px; align-items: center; background: rgba(255,255,255,0.03); padding: 6px 10px; border-radius: 4px; margin-bottom: 4px; font-size: 0.9rem; }
-        .skill-item:nth-child(even) { background: rgba(255,255,255,0.07); }
-        .skill-item-header { font-weight: bold; color: #777; font-size: 0.7rem; text-transform: uppercase; border-bottom: 1px solid #444; }
         .skill-val { font-weight: bold; color: var(--accent-color); text-align: center; }
-        input[type="checkbox"] { accent-color: var(--accent-color); transform: scale(1.2); cursor: pointer; }
 
-        /* TÄRNINGSPANEL */
         .dice-tray {
             position: fixed; bottom: 0; left: 0; right: 0;
             background: rgba(10, 10, 10, 0.98); border-top: 2px solid var(--accent-color);
             padding: 12px; display: flex; flex-direction: column; align-items: center;
-            z-index: 2000; box-shadow: 0 -5px 30px rgba(0,0,0,0.9);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            z-index: 2000; transition: transform 0.4s;
         }
-
-        .dice-tray.minimized { transform: translateY(calc(100% - 2px)); }
-
+        .dice-tray.minimized { transform: translateY(calc(100% - 5px)); }
         .dice-toggle {
-            background: var(--accent-color); color: white; width: 50px; height: 20px;
-            position: absolute; top: -20px; right: 20px; border-radius: 8px 8px 0 0;
-            display: flex; justify-content: center; align-items: center; cursor: pointer;
+            background: var(--accent-color); color: white; width: 80px; height: 25px;
+            position: absolute; top: -25px; right: 20px; border-radius: 8px 8px 0 0;
+            display: flex; justify-content: center; align-items: center; cursor: pointer; font-weight: bold; font-size: 0.8rem;
         }
-
-        .dice-log { font-size: 0.75rem; color: #888; margin-bottom: 5px; height: 18px; font-style: italic; }
         .dice-result-big { font-size: 1.6rem; font-weight: bold; color: var(--accent-color); margin-bottom: 12px; }
-        .dice-buttons { display: flex; gap: 8px; width: 100%; max-width: 500px; justify-content: center; }
-        .dice-btn { background: #222; border: 1px solid var(--accent-color); color: white; padding: 12px; border-radius: 8px; cursor: pointer; flex: 1; font-weight: bold; transition: 0.1s; }
-        .dice-btn:active { background: var(--accent-color); transform: translateY(2px); }
-
-        .save-banner { text-align: center; color: #555; font-size: 0.7rem; margin-top: 20px; }
+        .dice-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 400px; }
+        .dice-btn { background: #222; border: 1px solid var(--accent-color); color: white; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="room-bar">
-        <input type="text" id="roomName" class="room-input" placeholder="Rumsnamn..." value="MittRum">
-        <button id="connectBtn" style="background: var(--accent-color); border: none; color: white; padding: 5px 15px; border-radius: 20px; cursor: pointer; font-weight: bold;">Anslut</button>
-        <span id="connectionStatus" style="font-size: 0.7rem; color: #666;">🔴 Ej ansluten</span>
-        <a href="index.html" class="nav-link">🏠 Meny</a>
+    <div class="room-dropdown" id="roomMenu">
+        <div class="room-header" onclick="document.getElementById('roomMenu').classList.toggle('open')">
+            <span id="connectionStatus">🔴 Ej ansluten (Klicka här)</span>
+            <span>▼</span>
+        </div>
+        <div class="room-content">
+            <input type="text" id="roomName" class="room-input" placeholder="Rumsnamn..." value="MittRum">
+            <button id="connectBtn" style="background: var(--accent-color); border: none; color: white; padding: 10px; border-radius: 20px; cursor: pointer; font-weight: bold;">Anslut till Rum</button>
+            <div class="user-list" id="userList">Anslutna: -</div>
+            <div style="text-align: center; margin-top: 5px;"><a href="index.html" class="nav-link">🏠 Till Huvudmeny</a></div>
+        </div>
     </div>
 
     <div class="page-header">
@@ -166,18 +126,9 @@
 
     <div class="container">
         <div class="section grid-3">
-            <div class="input-group">
-                <label>Namn</label>
-                <input type="text" id="charName" class="save-field" placeholder="Namn">
-            </div>
-            <div class="input-group">
-                <label>Släkte</label>
-                <input type="text" id="kin" class="save-field" placeholder="Släkte">
-            </div>
-            <div class="input-group">
-                <label>Yrke</label>
-                <input type="text" id="profession" class="save-field" placeholder="Yrke">
-            </div>
+            <div class="input-group"><label>Namn</label><input type="text" id="charName" class="save-field" placeholder="Namn"></div>
+            <div class="input-group"><label>Släkte</label><input type="text" id="kin" class="save-field" placeholder="Släkte"></div>
+            <div class="input-group"><label>Yrke</label><input type="text" id="profession" class="save-field" placeholder="Yrke"></div>
         </div>
 
         <div class="section">
@@ -190,7 +141,6 @@
                 <div class="stat-box"><label>PSY</label><br><input type="number" id="psy" class="save-field attr" value="10"></div>
                 <div class="stat-box"><label>KAR</label><br><input type="number" id="kar" class="save-field attr" value="10"></div>
             </div>
-
             <div class="derived-stats">
                 <div class="derived-box"><label>Max KP</label><div id="out-kp" class="derived-val">10</div></div>
                 <div class="derived-box"><label>Max VP</label><div id="out-vp" class="derived-val">10</div></div>
@@ -200,43 +150,22 @@
             </div>
         </div>
 
-        <div class="skills-container">
-            <div class="section">
-                <h3>Allmänna Färdigheter</h3>
-                <div class="skill-item skill-item-header"><div>Färdighet</div><div>G</div><div>T</div><div>V</div></div>
-                <div class="skill-item"><div>Dyrka lås (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-lock" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Fingerfärdighet (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-sleight" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Hantverk (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-craft" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Hoppa & Klättra (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-jump" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Kulturkännedom (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-culture" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Läkekonst (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-medicine" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Lärdom (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-lore" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Rida (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-ride" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Sjökunnighet (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-sea" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Smyga (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-stealth" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Undvika (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-dodge" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Uppmärksamhet (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-spot" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Överlevnad (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-survive" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Övertala (KAR)</div><div class="skill-base" data-attr="kar">3</div><input type="checkbox" id="t-persuade" class="save-field"><div class="skill-val">3</div></div>
-            </div>
-            <div class="section">
-                <h3>Vapenfärdigheter</h3>
-                <div class="skill-item skill-item-header"><div>Färdighet</div><div>G</div><div>T</div><div>V</div></div>
-                <div class="skill-item"><div>Båge (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-bow" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Kniv (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-knife" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Slagsmål (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-brawl" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Svärd (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-sword" class="save-field"><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Yxa (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-axe" class="save-field"><div class="skill-val">3</div></div>
-            </div>
+        <div class="section">
+            <h3>Allmänna Färdigheter</h3>
+            <div class="skill-item skill-item-header"><div>Färdighet</div><div>G</div><div>T</div><div>V</div></div>
+            <div class="skill-item"><div>Hoppa & Klättra (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-jump" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Smyga (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-stealth" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Uppmärksamhet (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-spot" class="save-field"><div class="skill-val">3</div></div>
+            <div class="skill-item"><div>Övertala (KAR)</div><div class="skill-base" data-attr="kar">3</div><input type="checkbox" id="t-persuade" class="save-field"><div class="skill-val">3</div></div>
         </div>
 
-        <div class="save-banner">💾 Karaktär sparas lokalt. Tärningsslag delas i rummet.</div>
+        <div class="save-banner">💾 Sparas lokalt. Tärningsslag delas online.</div>
     </div>
 
     <div class="dice-tray minimized" id="diceTray">
-        <div class="dice-toggle" id="diceToggle">▲</div>
-        <div id="dice-history" class="dice-log">Logg: Ingen aktivitet i rummet</div>
-        <div id="dice-result" class="dice-result-big">Redo att rulla</div>
+        <div class="dice-toggle" id="diceToggle">Tärningar</div>
+        <div id="dice-history" class="dice-log">Logg: Ingen aktivitet</div>
+        <div id="dice-result" class="dice-result-big">Redo</div>
         <div class="dice-buttons">
             <button class="dice-btn" data-sides="4">T4</button>
             <button class="dice-btn" data-sides="6">T6</button>
@@ -249,7 +178,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-    import { getDatabase, ref, push, onChildAdded, serverTimestamp, query, limitToLast, off } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+    import { getDatabase, ref, push, onChildAdded, onValue, serverTimestamp, query, limitToLast, off, set, onDisconnect } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyApQWEuMm5hCpp174145GgcdUOGEmfO2RU",
@@ -265,78 +194,80 @@
 
     const roomInp = document.getElementById('roomName');
     const charInp = document.getElementById('charName');
-    const statusDot = document.getElementById('connectionStatus');
-    const connectBtn = document.getElementById('connectBtn');
+    const statusTxt = document.getElementById('connectionStatus');
+    const userListDiv = document.getElementById('userList');
     const diceLog = document.getElementById('dice-history');
     const diceResult = document.getElementById('dice-result');
 
     let currentRollsRef = null;
 
     // --- ANSLUTNINGSLOGIK ---
-    function connectToRoom() {
+    window.connectToRoom = function() {
         const room = roomInp.value.trim();
-        if (!room) return alert("Skriv in ett rumsnamn!");
+        const name = charInp.value.trim() || "Anonym";
+        if (!room) return alert("Skriv in rumsnamn!");
 
-        // Koppla bort gamla lyssnare om de finns
         if (currentRollsRef) off(currentRollsRef);
 
-        const roomPath = `rooms/${room}/rolls`;
-        currentRollsRef = query(ref(db, roomPath), limitToLast(5));
+        // 1. Markera närvaro
+        const myPresenceRef = ref(db, `rooms/${room}/users/${name}`);
+        set(myPresenceRef, true);
+        onDisconnect(myPresenceRef).remove();
 
-        // Bekräfta anslutning
-        statusDot.innerText = `🟢 Ansluten till: ${room}`;
-        statusDot.style.color = "#4ca300";
-        diceLog.innerText = "Väntar på nya slag i rummet...";
+        // 2. Lyssna på användare
+        onValue(ref(db, `rooms/${room}/users`), (snapshot) => {
+            const users = snapshot.val() ? Object.keys(snapshot.val()) : [];
+            userListDiv.innerHTML = "Anslutna: " + users.map(u => `<span class="user-badge">${u}</span>`).join('');
+        });
 
-        // Lyssna på nya slag
+        // 3. Lyssna på slag
+        currentRollsRef = query(ref(db, `rooms/${room}/rolls`), limitToLast(1));
         onChildAdded(currentRollsRef, (snapshot) => {
             const data = snapshot.val();
-            // Visa vem som slog vad i loggen
-            diceLog.innerText = `${data.user} slog ${data.dice}: ${data.val}`;
-            // Visa det stora resultatet
+            diceLog.innerText = `${data.user} slog ${data.dice}...`;
             diceResult.innerText = `${data.user}: ${data.val}`;
-            
-            // Liten animation för att visa att det hände något
             diceResult.style.transform = "scale(1.2)";
             setTimeout(() => { diceResult.style.transform = "scale(1)"; }, 200);
         });
-    }
 
-    connectBtn.onclick = connectToRoom;
+        statusTxt.innerText = `🟢 Rum: ${room}`;
+        statusTxt.style.color = "#4ca300";
+        document.getElementById('roomMenu').classList.remove('open');
+    };
 
-    // --- TÄRNINGS-SLAG ---
+    document.getElementById('connectBtn').onclick = connectToRoom;
+
+    // --- TÄRNINGAR ---
     window.rollDice = function(sides) {
-        const name = charInp.value.trim() || "Okänd hjälte";
+        const name = charInp.value.trim() || "Anonym";
         const room = roomInp.value.trim();
         const result = Math.floor(Math.random() * sides) + 1;
 
-        if (!room) return alert("Du måste ansluta till ett rum först!");
+        if (!statusTxt.innerText.includes("Rum:")) return alert("Anslut till ett rum först!");
 
-        // Skicka till Firebase
         push(ref(db, `rooms/${room}/rolls`), {
-            user: name,
-            dice: `T${sides}`,
-            val: result,
-            timestamp: serverTimestamp()
+            user: name, dice: `T${sides}`, val: result, timestamp: serverTimestamp()
         });
     };
 
-    // Koppla tärningsknappar
     document.querySelectorAll('.dice-btn').forEach(btn => {
         btn.onclick = () => window.rollDice(btn.dataset.sides);
     });
 
-    // --- BEHÅLL DIN GAMLA LOKALA LOGIK HÄR (Calculation & Save) ---
+    // --- BERÄKNINGAR OCH SPARNING ---
     const fields = document.querySelectorAll('.save-field');
-    function calculateEverything() {
+    function calculate() {
         const getV = (id) => parseInt(document.getElementById(id).value) || 0;
         const attr = { sty:getV('sty'), fys:getV('fys'), smi:getV('smi'), int:getV('int'), psy:getV('psy'), kar:getV('kar') };
+        
         document.getElementById('out-kp').innerText = attr.fys;
         document.getElementById('out-vp').innerText = attr.psy;
         document.getElementById('out-carry').innerText = Math.ceil(attr.sty / 2);
+        
         const getBonus = (v) => v <= 12 ? "-" : (v <= 15 ? "+T4" : "+T6");
         document.getElementById('out-dmg-sty').innerText = getBonus(attr.sty);
         document.getElementById('out-dmg-smi').innerText = getBonus(attr.smi);
+
         document.querySelectorAll('.skill-item:not(.skill-item-header)').forEach(row => {
             const bSpan = row.querySelector('.skill-base');
             const vDiv = row.querySelector('.skill-val');
@@ -354,16 +285,14 @@
         if (saved !== null) { if (f.type === 'checkbox') f.checked = saved === 'true'; else f.value = saved; }
         f.addEventListener('input', () => {
             localStorage.setItem(f.id, f.type === 'checkbox' ? f.checked : f.value);
-            calculateEverything();
+            calculate();
         });
     });
-    calculateEverything();
 
-    // Tärnings-UI toggle
-    const tray = document.getElementById('diceTray');
+    calculate();
+
     document.getElementById('diceToggle').onclick = () => {
-        tray.classList.toggle('minimized');
-        document.getElementById('diceToggle').innerText = tray.classList.contains('minimized') ? "▲" : "▼";
+        document.getElementById('diceTray').classList.toggle('minimized');
     };
 </script>
 </body>
