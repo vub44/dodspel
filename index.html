@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DoD Karaktärsblad v4</title>
+    <title>DoD Karaktärsblad v5</title>
     <style>
         :root {
-            --bg-color: #121212; /* Något mörkare bakgrund */
+            --bg-color: #121212;
             --card-bg: #2d2d2d;
             --text-color: #f0f0f0;
-            --accent-color: #4ca300;
+            --accent-color: #4ca300; /* Din nya gröna färg! */
         }
 
         body {
@@ -17,96 +17,122 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 0; /* Tog bort padding här */
+            padding: 0;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto; /* Centrerad utan marginal uppe/nere */
-            background: var(--card-bg);
-            border-left: 1px solid var(--accent-color);
-            border-right: 1px solid var(--accent-color);
-            border-bottom: 1px solid var(--accent-color);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            min-height: 100vh;
-        }
-
-        /* --- NY BANNER-STIL --- */
+        /* --- BANNERS SOM TÄCKER HELA SKÄRMEN --- */
         .hero-banner {
-            /* BYT UT NAMNET NEDAN MOT DITT BILDNAMN */
-            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('dragonbane_banner.jpg');
+            /* Kom ihåg att ladda upp bilden till GitHub! */
+            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.8)), url('dragonbane_banner.jpg');
             
-            background-size: cover; /* Bilden täcker hela ytan */
-            background-position: center 20%; /* Centrerar bilden, justerad lite uppåt */
-            height: 300px; /* Höjden på bannern */
+            background-size: cover;
+            background-position: center 25%;
+            height: 350px; /* Gjorde den lite maffigare! */
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Centrerar rubrikerna vertikalt */
-            align-items: center; /* Centrerar rubrikerna horisontellt */
-            border-bottom: 3px solid var(--accent-color);
+            justify-content: center;
+            align-items: center;
+            border-bottom: 4px solid var(--accent-color);
+            width: 100%; /* Alltid 100% av fönstret */
         }
 
-        /* Justera rubrikerna inuti bannern */
         .hero-banner h1, .hero-banner h2 {
             margin: 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8); /* Gör texten läsbar mot bilden */
-            color: #fff; /* Vit text */
-        }
-        .hero-banner h1 {
-            font-size: 3rem;
-            letter-spacing: 2px;
-        }
-        .hero-banner h2 {
-            color: var(--accent-color);
-            font-size: 1.2rem;
-            margin-top: 10px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.9);
+            color: #fff;
         }
 
-        /* Ny container för själva innehållet med padding */
-        .main-content {
+        .hero-banner h1 {
+            font-size: 3.5rem;
+            letter-spacing: 2px;
+        }
+
+        .hero-banner h2 {
+            color: var(--accent-color);
+            font-size: 1.4rem;
+            margin-top: 10px;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        /* --- KARAKTÄRSBLADET (CENTRERAT) --- */
+        .container {
+            max-width: 900px;
+            margin: 30px auto; /* 30px avstånd ner från bannern */
+            background: var(--card-bg);
+            border: 1px solid var(--accent-color); /* Grön ram runt hela bladet */
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.7);
             padding: 2rem;
         }
 
         .section {
-            background: #333;
-            padding: 15px;
+            background: #252525; /* Något mörkare för bättre kontrast */
+            padding: 20px;
             border-radius: 6px;
             margin-bottom: 1.5rem;
             border-left: 4px solid var(--accent-color);
         }
 
-        /* ... Resten av CSS är samma som v3 ... */
+        h3 {
+            color: var(--accent-color);
+            margin-top: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 1.1rem;
+        }
+
         .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
         .grid-6 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         @media (min-width: 600px) { .grid-6 { grid-template-columns: repeat(6, 1fr); } }
+
         .input-group { display: flex; flex-direction: column; }
         label { font-size: 0.85rem; margin-bottom: 5px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
-        input { background: #3d3d3d; border: 1px solid #555; color: white; padding: 10px; border-radius: 4px; font-size: 1rem; }
+        
+        input { 
+            background: #333; 
+            border: 1px solid #555; 
+            color: white; 
+            padding: 10px; 
+            border-radius: 4px; 
+            font-size: 1rem; 
+        }
+        
         input:focus { outline: none; border-color: var(--accent-color); }
-        .stat-box { background: #383838; padding: 10px; border-radius: 6px; text-align: center; }
-        .stat-box input { width: 50px; text-align: center; font-size: 1.3rem; font-weight: bold; }
+
+        .stat-box { background: #333; padding: 10px; border-radius: 6px; text-align: center; border: 1px solid #444; }
+        .stat-box input { width: 50px; text-align: center; font-size: 1.3rem; font-weight: bold; background: #222; }
+
         .derived-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 1rem; }
-        .derived-box { background: #252525; padding: 10px; border-radius: 4px; text-align: center; border: 1px solid #444; }
+        .derived-box { background: #1e1e1e; padding: 10px; border-radius: 4px; text-align: center; border: 1px solid #444; }
         .derived-val { font-size: 1.5rem; font-weight: bold; color: var(--accent-color); margin-top: 5px; }
+
         .skills-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
         .skills-list { display: flex; flex-direction: column; gap: 5px; }
-        .skill-item { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; align-items: center; background: #3a3a3a; padding: 6px 10px; border-radius: 4px; gap: 10px; font-size: 0.95rem; }
-        .skill-item:nth-child(even) { background: #353535; }
+        .skill-item { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; align-items: center; background: #2a2a2a; padding: 8px 12px; border-radius: 4px; gap: 10px; font-size: 0.95rem; }
+        .skill-item:nth-child(even) { background: #333; }
         .skill-item-header { background: transparent !important; font-weight: bold; border-bottom: 1px solid #555; padding-bottom: 5px; font-size: 0.85rem; color: #aaa; text-transform: uppercase; }
         .skill-val { font-weight: bold; color: var(--accent-color); text-align: center; }
-        .save-banner { text-align: center; color: #888; font-size: 0.8rem; margin-top: 2rem; }
+
+        /* Kryssruta (Checkbox) grön */
+        input[type="checkbox"] {
+            accent-color: var(--accent-color);
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+
+        .save-banner { text-align: center; color: #777; font-size: 0.8rem; margin-top: 2rem; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    
     <div class="hero-banner">
         <h1>⚔️ Drakar och Demoner</h1>
-        <h2>Karaktärsblad</h2>
+        <h2>Digitalt Karaktärsblad</h2>
     </div>
 
-    <div class="main-content">
+    <div class="container">
+        
         <div class="section grid-3">
             <div class="input-group">
                 <label for="charName">Namn</label>
@@ -226,8 +252,9 @@
         </div>
 
         <div class="save-banner">💾 Sparas automatiskt i din webbläsare.</div>
-    </div> </div> <script>
-    // --- JavaScript är exakt samma som v3 ---
+    </div>
+
+<script>
     const fields = document.querySelectorAll('.save-field');
 
     window.addEventListener('load', () => {
