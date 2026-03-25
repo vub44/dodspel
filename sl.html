@@ -1,1 +1,169 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoD Spelledarskärm v1.0</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: rgba(35, 35, 35, 0.95);
+            --accent-color: #4ca300;
+            --text-color: #f0f0f0;
+            --danger-color: #a30000;
+        }
 
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('dragonbane_banner.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .sl-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto 100px auto;
+        }
+
+        .sl-card {
+            background: var(--card-bg);
+            border: 1px solid var(--accent-color);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        h2 { color: var(--accent-color); margin-top: 0; border-bottom: 1px solid #444; padding-bottom: 10px; font-size: 1.2rem; text-transform: uppercase; }
+
+        /* INITIATIV-LISTA */
+        .init-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+            background: rgba(255,255,255,0.05);
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .init-number { width: 40px; background: #222; border: 1px solid var(--accent-color); color: white; text-align: center; border-radius: 4px; padding: 5px; font-weight: bold; }
+        .init-name { flex: 1; background: transparent; border: none; border-bottom: 1px solid #555; color: white; padding: 5px; }
+
+        /* MONSTER-TRACKER */
+        .monster-box {
+            border: 1px solid #444;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .hp-controls { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+        .hp-btn { background: #333; border: 1px solid #555; color: white; cursor: pointer; padding: 5px 10px; border-radius: 4px; }
+        .hp-btn:hover { background: var(--accent-color); }
+        
+        .nav-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+            text-decoration: none;
+            border: 1px solid var(--accent-color);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        button.add-btn {
+            background: var(--accent-color);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="nav-btn">🏠 Till Menyn</a>
+
+    <div class="sl-grid">
+        
+        <div class="sl-card">
+            <h2>⚔️ Initiativ</h2>
+            <div id="init-container">
+                </div>
+            <button class="add-btn" onclick="addInitRow()">+ Lägg till deltagare</button>
+            <button class="add-btn" style="background:#444; margin-top:5px;" onclick="sortInitiative()">Sortera (Lägst först)</button>
+        </div>
+
+        <div class="sl-card">
+            <h2>🐉 Fiender / NPC</h2>
+            <div id="monster-container">
+                </div>
+            <button class="add-btn" onclick="addMonster()">+ Lägg till fiende</button>
+        </div>
+
+    </div>
+
+    <script>
+        // FUNKTIONER FÖR INITIATIV
+        function addInitRow() {
+            const container = document.getElementById('init-container');
+            const div = document.createElement('div');
+            div.className = 'init-row';
+            div.innerHTML = `
+                <input type="number" class="init-number" placeholder="T">
+                <input type="text" class="init-name" placeholder="Namn...">
+                <button onclick="this.parentElement.remove()" style="background:none; border:none; color:#666; cursor:pointer;">✕</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function sortInitiative() {
+            const container = document.getElementById('init-container');
+            const rows = Array.from(container.querySelectorAll('.init-row'));
+            rows.sort((a, b) => {
+                const valA = parseInt(a.querySelector('.init-number').value) || 99;
+                const valB = parseInt(b.querySelector('.init-number').value) || 99;
+                return valA - valB;
+            });
+            rows.forEach(row => container.appendChild(row));
+        }
+
+        // FUNKTIONER FÖR MONSTER
+        function addMonster() {
+            const container = document.getElementById('monster-container');
+            const div = document.createElement('div');
+            div.className = 'monster-box';
+            div.innerHTML = `
+                <input type="text" placeholder="Monster namn" style="background:none; border:none; color:var(--accent-color); font-weight:bold; width:100%;">
+                <div class="hp-controls">
+                    <span>KP:</span>
+                    <button class="hp-btn" onclick="changeHP(this, -1)">-1</button>
+                    <input type="number" value="10" style="width:40px; text-align:center; background:#222; color:white; border:1px solid #444;">
+                    <button class="hp-btn" onclick="changeHP(this, 1)">+1</button>
+                    <button onclick="this.parentElement.parentElement.remove()" style="margin-left:auto; background:none; border:none; color:#666;">🗑️</button>
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        function changeHP(btn, amount) {
+            const input = btn.parentElement.querySelector('input');
+            input.value = parseInt(input.value) + amount;
+        }
+    </script>
+</body>
+</html>
