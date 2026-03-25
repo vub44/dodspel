@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DoD Karaktärsblad v3</title>
+    <title>DoD Karaktärsblad v4</title>
     <style>
         :root {
-            --bg-color: #1a1a1a;
+            --bg-color: #121212; /* Något mörkare bakgrund */
             --card-bg: #2d2d2d;
             --text-color: #f0f0f0;
-            --accent-color: #4ca300;
+            --accent-color: #d4af37;
         }
 
         body {
@@ -17,23 +17,54 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 20px;
+            padding: 0; /* Tog bort padding här */
         }
 
         .container {
             max-width: 900px;
-            margin: 0 auto;
+            margin: 0 auto; /* Centrerad utan marginal uppe/nere */
             background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 8px;
-            border: 1px solid var(--accent-color);
+            border-left: 1px solid var(--accent-color);
+            border-right: 1px solid var(--accent-color);
+            border-bottom: 1px solid var(--accent-color);
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            min-height: 100vh;
         }
 
-        h1, h2, h3 {
+        /* --- NY BANNER-STIL --- */
+        .hero-banner {
+            /* BYT UT NAMNET NEDAN MOT DITT BILDNAMN */
+            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('dragonbane_banner.jpg');
+            
+            background-size: cover; /* Bilden täcker hela ytan */
+            background-position: center 20%; /* Centrerar bilden, justerad lite uppåt */
+            height: 300px; /* Höjden på bannern */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Centrerar rubrikerna vertikalt */
+            align-items: center; /* Centrerar rubrikerna horisontellt */
+            border-bottom: 3px solid var(--accent-color);
+        }
+
+        /* Justera rubrikerna inuti bannern */
+        .hero-banner h1, .hero-banner h2 {
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8); /* Gör texten läsbar mot bilden */
+            color: #fff; /* Vit text */
+        }
+        .hero-banner h1 {
+            font-size: 3rem;
+            letter-spacing: 2px;
+        }
+        .hero-banner h2 {
             color: var(--accent-color);
-            text-align: center;
-            margin-top: 0;
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+
+        /* Ny container för själva innehållet med padding */
+        .main-content {
+            padding: 2rem;
         }
 
         .section {
@@ -44,268 +75,159 @@
             border-left: 4px solid var(--accent-color);
         }
 
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        .grid-6 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-        }
-
-        @media (min-width: 600px) {
-            .grid-6 { grid-template-columns: repeat(6, 1fr); }
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            font-size: 0.85rem;
-            margin-bottom: 5px;
-            color: #aaa;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        input {
-            background: #3d3d3d;
-            border: 1px solid #555;
-            color: white;
-            padding: 10px;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--accent-color);
-        }
-
-        .stat-box {
-            background: #383838;
-            padding: 10px;
-            border-radius: 6px;
-            text-align: center;
-        }
-
-        .stat-box input {
-            width: 50px;
-            text-align: center;
-            font-size: 1.3rem;
-            font-weight: bold;
-        }
-
-        .derived-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 10px;
-            margin-top: 1rem;
-        }
-
-        .derived-box {
-            background: #252525;
-            padding: 10px;
-            border-radius: 4px;
-            text-align: center;
-            border: 1px solid #444;
-        }
-
-        .derived-val {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent-color);
-            margin-top: 5px;
-        }
-
-        /* Färdigheter Tabell */
-        .skills-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 20px;
-        }
-
-        .skills-list {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .skill-item {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            align-items: center;
-            background: #3a3a3a;
-            padding: 6px 10px;
-            border-radius: 4px;
-            gap: 10px;
-            font-size: 0.95rem;
-        }
-
-        .skill-item:nth-child(even) {
-            background: #353535;
-        }
-
-        .skill-item-header {
-            background: transparent !important;
-            font-weight: bold;
-            border-bottom: 1px solid #555;
-            padding-bottom: 5px;
-            font-size: 0.85rem;
-            color: #aaa;
-            text-transform: uppercase;
-        }
-
-        .skill-val {
-            font-weight: bold;
-            color: var(--accent-color);
-            text-align: center;
-        }
-
-        .save-banner {
-            text-align: center;
-            color: #888;
-            font-size: 0.8rem;
-            margin-top: 2rem;
-        }
+        /* ... Resten av CSS är samma som v3 ... */
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .grid-6 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        @media (min-width: 600px) { .grid-6 { grid-template-columns: repeat(6, 1fr); } }
+        .input-group { display: flex; flex-direction: column; }
+        label { font-size: 0.85rem; margin-bottom: 5px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
+        input { background: #3d3d3d; border: 1px solid #555; color: white; padding: 10px; border-radius: 4px; font-size: 1rem; }
+        input:focus { outline: none; border-color: var(--accent-color); }
+        .stat-box { background: #383838; padding: 10px; border-radius: 6px; text-align: center; }
+        .stat-box input { width: 50px; text-align: center; font-size: 1.3rem; font-weight: bold; }
+        .derived-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 1rem; }
+        .derived-box { background: #252525; padding: 10px; border-radius: 4px; text-align: center; border: 1px solid #444; }
+        .derived-val { font-size: 1.5rem; font-weight: bold; color: var(--accent-color); margin-top: 5px; }
+        .skills-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
+        .skills-list { display: flex; flex-direction: column; gap: 5px; }
+        .skill-item { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; align-items: center; background: #3a3a3a; padding: 6px 10px; border-radius: 4px; gap: 10px; font-size: 0.95rem; }
+        .skill-item:nth-child(even) { background: #353535; }
+        .skill-item-header { background: transparent !important; font-weight: bold; border-bottom: 1px solid #555; padding-bottom: 5px; font-size: 0.85rem; color: #aaa; text-transform: uppercase; }
+        .skill-val { font-weight: bold; color: var(--accent-color); text-align: center; }
+        .save-banner { text-align: center; color: #888; font-size: 0.8rem; margin-top: 2rem; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>⚔️ Drakar och Demoner</h1>
-    <h2>Karaktärsblad</h2>
-
-    <div class="section grid-3">
-        <div class="input-group">
-            <label for="charName">Namn</label>
-            <input type="text" id="charName" class="save-field" placeholder="Bilbo">
-        </div>
-        <div class="input-group">
-            <label for="kin">Släkte</label>
-            <input type="text" id="kin" class="save-field" placeholder="Anka, Alv...">
-        </div>
-        <div class="input-group">
-            <label for="profession">Yrke</label>
-            <input type="text" id="profession" class="save-field" placeholder="Krigare, Tjuv...">
-        </div>
+    
+    <div class="hero-banner">
+        <h1>⚔️ Drakar och Demoner</h1>
+        <h2>Karaktärsblad</h2>
     </div>
 
-    <div class="section">
-        <h3>Grundegenskaper</h3>
-        <div class="grid-6">
-            <div class="stat-box">
-                <label for="sty">STY</label><br>
-                <input type="number" id="sty" class="save-field attr" value="10">
+    <div class="main-content">
+        <div class="section grid-3">
+            <div class="input-group">
+                <label for="charName">Namn</label>
+                <input type="text" id="charName" class="save-field" placeholder="Bilbo">
             </div>
-            <div class="stat-box">
-                <label for="fys">FYS</label><br>
-                <input type="number" id="fys" class="save-field attr" value="10">
+            <div class="input-group">
+                <label for="kin">Släkte</label>
+                <input type="text" id="kin" class="save-field" placeholder="Anka, Alv...">
             </div>
-            <div class="stat-box">
-                <label for="smi">SMI</label><br>
-                <input type="number" id="smi" class="save-field attr" value="10">
-            </div>
-            <div class="stat-box">
-                <label for="int">INT</label><br>
-                <input type="number" id="int" class="save-field attr" value="10">
-            </div>
-            <div class="stat-box">
-                <label for="psy">PSY</label><br>
-                <input type="number" id="psy" class="save-field attr" value="10">
-            </div>
-            <div class="stat-box">
-                <label for="kar">KAR</label><br>
-                <input type="number" id="kar" class="save-field attr" value="10">
-            </div>
-        </div>
-
-        <div class="derived-stats">
-            <div class="derived-box">
-                <label>Max KP</label>
-                <div id="out-kp" class="derived-val">10</div>
-            </div>
-            <div class="derived-box">
-                <label>Max VP</label>
-                <div id="out-vp" class="derived-val">10</div>
-            </div>
-            <div class="derived-box">
-                <label>Bärförmåga</label>
-                <div id="out-carry" class="derived-val">5</div>
-            </div>
-            <div class="derived-box">
-                <label>Skadebonus (Närstrid)</label>
-                <div id="out-dmg-sty" class="derived-val">-</div>
-            </div>
-            <div class="derived-box">
-                <label>Skadebonus (Avstånd)</label>
-                <div id="out-dmg-smi" class="derived-val">-</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="skills-container">
-        
-        <div class="section">
-            <h3>Färdigheter</h3>
-            <div class="skills-list">
-                <div class="skill-item skill-item-header">
-                    <div>Färdighet</div>
-                    <div style="text-align:center;">Grund</div>
-                    <div style="text-align:center;">Tränad</div>
-                    <div style="text-align:center;">Totalt</div>
-                </div>
-
-                <div class="skill-item"><div>Dyrka lås (SMI)</div><div class="skill-base" data-attr="smi">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-lock"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Fingerfärdighet (SMI)</div><div class="skill-base" data-attr="smi">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-sleight"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Hantverk (STY)</div><div class="skill-base" data-attr="sty">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-craft"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Hoppa & klättra (SMI)</div><div class="skill-base" data-attr="smi">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-jump"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Kulturkännedom (INT)</div><div class="skill-base" data-attr="int">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-culture"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Läkekonst (INT)</div><div class="skill-base" data-attr="int">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-medicine"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Lärdom (INT)</div><div class="skill-base" data-attr="int">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-lore"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Rida (SMI)</div><div class="skill-base" data-attr="smi">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-ride"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Sjökunnighet (INT)</div><div class="skill-base" data-attr="int">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-sea"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Smyga (SMI)</div><div class="skill-base" data-attr="smi">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-stealth"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Undvika (SMI)</div><div class="skill-base" data-attr="smi">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-dodge"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Uppmärksamhet (INT)</div><div class="skill-base" data-attr="int">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-spot"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Överlevnad (INT)</div><div class="skill-base" data-attr="int">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-survive"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Övertala (KAR)</div><div class="skill-base" data-attr="kar">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-persuade"></div><div class="skill-val">3</div></div>
+            <div class="input-group">
+                <label for="profession">Yrke</label>
+                <input type="text" id="profession" class="save-field" placeholder="Krigare, Tjuv...">
             </div>
         </div>
 
         <div class="section">
-            <h3>Vapenfärdigheter</h3>
-            <div class="skills-list">
-                <div class="skill-item skill-item-header">
-                    <div>Färdighet</div>
-                    <div style="text-align:center;">Grund</div>
-                    <div style="text-align:center;">Tränad</div>
-                    <div style="text-align:center;">Totalt</div>
+            <h3>Grundegenskaper</h3>
+            <div class="grid-6">
+                <div class="stat-box">
+                    <label for="sty">STY</label><br>
+                    <input type="number" id="sty" class="save-field attr" value="10">
                 </div>
+                <div class="stat-box">
+                    <label for="fys">FYS</label><br>
+                    <input type="number" id="fys" class="save-field attr" value="10">
+                </div>
+                <div class="stat-box">
+                    <label for="smi">SMI</label><br>
+                    <input type="number" id="smi" class="save-field attr" value="10">
+                </div>
+                <div class="stat-box">
+                    <label for="int">INT</label><br>
+                    <input type="number" id="int" class="save-field attr" value="10">
+                </div>
+                <div class="stat-box">
+                    <label for="psy">PSY</label><br>
+                    <input type="number" id="psy" class="save-field attr" value="10">
+                </div>
+                <div class="stat-box">
+                    <label for="kar">KAR</label><br>
+                    <input type="number" id="kar" class="save-field attr" value="10">
+                </div>
+            </div>
 
-                <div class="skill-item"><div>Armborst (SMI)</div><div class="skill-base" data-attr="smi">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-xbow"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Båge (SMI)</div><div class="skill-base" data-attr="smi">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-bow"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Kastvapen (SMI)</div><div class="skill-base" data-attr="smi">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-throw"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Klubba (STY)</div><div class="skill-base" data-attr="sty">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-mace"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Kniv (SMI)</div><div class="skill-base" data-attr="smi">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-knife"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Sköld (STY)</div><div class="skill-base" data-attr="sty">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-shield"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Slagsmål (STY)</div><div class="skill-base" data-attr="sty">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-brawl"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Spjut (STY)</div><div class="skill-base" data-attr="sty">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-spear"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Svärd (STY)</div><div class="skill-base" data-attr="sty">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-sword"></div><div class="skill-val">3</div></div>
-                <div class="skill-item"><div>Yxa (STY)</div><div class="skill-base" data-attr="sty">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-axe"></div><div class="skill-val">3</div></div>
+            <div class="derived-stats">
+                <div class="derived-box">
+                    <label>Max KP</label>
+                    <div id="out-kp" class="derived-val">10</div>
+                </div>
+                <div class="derived-box">
+                    <label>Max VP</label>
+                    <div id="out-vp" class="derived-val">10</div>
+                </div>
+                <div class="derived-box">
+                    <label>Bärförmåga</label>
+                    <div id="out-carry" class="derived-val">5</div>
+                </div>
+                <div class="derived-box">
+                    <label>Skadebonus (Närstrid)</label>
+                    <div id="out-dmg-sty" class="derived-val">-</div>
+                </div>
+                <div class="derived-box">
+                    <label>Skadebonus (Avstånd)</label>
+                    <div id="out-dmg-smi" class="derived-val">-</div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="save-banner">💾 Sparas automatiskt i din webbläsare.</div>
-</div>
+        <div class="skills-container">
+            <div class="section">
+                <h3>Färdigheter</h3>
+                <div class="skills-list">
+                    <div class="skill-item skill-item-header">
+                        <div>Färdighet</div>
+                        <div style="text-align:center;">Grund</div>
+                        <div style="text-align:center;">Tränad</div>
+                        <div style="text-align:center;">Totalt</div>
+                    </div>
+                    <div class="skill-item"><div>Dyrka lås (SMI)</div><div class="skill-base" data-attr="smi">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-lock"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Fingerfärdighet (SMI)</div><div class="skill-base" data-attr="smi">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-sleight"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Hantverk (STY)</div><div class="skill-base" data-attr="sty">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-craft"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Hoppa & klättra (SMI)</div><div class="skill-base" data-attr="smi">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-jump"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Kulturkännedom (INT)</div><div class="skill-base" data-attr="int">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-culture"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Läkekonst (INT)</div><div class="skill-base" data-attr="int">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-medicine"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Lärdom (INT)</div><div class="skill-base" data-attr="int">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-lore"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Rida (SMI)</div><div class="skill-base" data-attr="smi">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-ride"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Sjökunnighet (INT)</div><div class="skill-base" data-attr="int">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-sea"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Smyga (SMI)</div><div class="skill-base" data-attr="smi">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-stealth"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Undvika (SMI)</div><div class="skill-base" data-attr="smi">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-dodge"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Uppmärksamhet (INT)</div><div class="skill-base" data-attr="int">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-spot"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Överlevnad (INT)</div><div class="skill-base" data-attr="int">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-survive"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Övertala (KAR)</div><div class="skill-base" data-attr="kar">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-persuade"></div><div class="skill-val">3</div></div>
+                </div>
+            </div>
 
-<script>
+            <div class="section">
+                <h3>Vapenfärdigheter</h3>
+                <div class="skills-list">
+                    <div class="skill-item skill-item-header">
+                        <div>Färdighet</div>
+                        <div style="text-align:center;">Grund</div>
+                        <div style="text-align:center;">Tränad</div>
+                        <div style="text-align:center;">Totalt</div>
+                    </div>
+                    <div class="skill-item"><div>Armborst (SMI)</div><div class="skill-base" data-attr="smi">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-xbow"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Båge (SMI)</div><div class="skill-base" data-attr="smi">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-bow"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Kastvapen (SMI)</div><div class="skill-base" data-attr="smi">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-throw"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Klubba (STY)</div><div class="skill-base" data-attr="sty">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-mace"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Kniv (SMI)</div><div class="skill-base" data-attr="smi">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-knife"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Sköld (STY)</div><div class="skill-base" data-attr="sty">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-shield"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Slagsmål (STY)</div><div class="skill-base" data-attr="sty">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-brawl"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Spjut (STY)</div><div class="skill-base" data-attr="sty">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-spear"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Svärd (STY)</div><div class="skill-base" data-attr="sty">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-sword"></div><div class="skill-val">3</div></div>
+                    <div class="skill-item"><div>Yxa (STY)</div><div class="skill-base" data-attr="sty">3</div><div style="text-align:center;"><input type="checkbox" class="save-field" id="t-axe"></div><div class="skill-val">3</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="save-banner">💾 Sparas automatiskt i din webbläsare.</div>
+    </div> </div> <script>
+    // --- JavaScript är exakt samma som v3 ---
     const fields = document.querySelectorAll('.save-field');
 
     window.addEventListener('load', () => {
