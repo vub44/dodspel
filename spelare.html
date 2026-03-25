@@ -294,6 +294,19 @@
             };
             set(sheetRef, sheetData);
         }
+        // Kontrollera om vi är anslutna till ett rum innan vi skickar
+        const roomName = document.getElementById('roomName').value.trim();
+        if (roomName && typeof db !== 'undefined') {
+            const charName = document.getElementById('charName').value.trim() || "Anonym";
+            const sheetRef = ref(db, `rooms/${roomName}/sheets/${charName}`);
+            
+            set(sheetRef, {
+                kp: document.getElementById('out-kp').innerText,
+                vp: document.getElementById('out-vp').innerText,
+                profession: document.getElementById('profession').value,
+                timestamp: serverTimestamp()
+            });
+        }
     }
 
     fields.forEach(f => {
