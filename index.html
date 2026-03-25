@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drakar och Demoner - Meny</title>
+    <title>Drakar och Demoner - Hub</title>
     <style>
         :root {
             --bg-color: #121212;
@@ -16,9 +16,9 @@
             background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('dragonbane_banner.jpg');
             background-size: cover;
             background-position: center;
+            background-attachment: fixed;
             height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             margin: 0;
@@ -26,51 +26,55 @@
         }
 
         .menu-card {
-            background: rgba(30, 30, 30, 0.9);
-            padding: 40px;
+            background: rgba(20, 20, 20, 0.95);
+            padding: 50px 30px;
             border-radius: 15px;
             border: 1px solid var(--accent-color);
             text-align: center;
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
-            max-width: 400px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
+            max-width: 450px;
             width: 90%;
+            backdrop-filter: blur(10px);
         }
 
-        h1 { margin-bottom: 30px; letter-spacing: 2px; }
+        h1 { margin-bottom: 10px; font-size: 2rem; letter-spacing: 1px; }
+        p { color: #888; margin-bottom: 40px; font-style: italic; }
 
         .btn-choice {
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
             width: 100%;
-            padding: 20px;
+            padding: 22px;
             margin: 15px 0;
-            background: transparent;
-            border: 2px solid var(--accent-color);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--accent-color);
             color: white;
             text-decoration: none;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: bold;
-            border-radius: 8px;
-            transition: 0.3s;
+            border-radius: 10px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .btn-choice:hover {
             background: var(--accent-color);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(76, 163, 0, 0.4);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(76, 163, 0, 0.5);
         }
 
-        .footer { margin-top: 20px; font-size: 0.8rem; color: #666; }
+        .btn-choice span { font-size: 0.9rem; opacity: 0.7; font-weight: normal; }
     </style>
 </head>
 <body>
 
     <div class="menu-card">
-        <h1>⚔️ Välj din roll</h1>
+        <h1>⚔️ Dragonbane Digital</h1>
+        <p>Välj din roll vid bordet</p>
         
-        <a href="spelare.html" class="btn-choice">🛡️ SPELARE</a>
-        <a href="sl.html" class="btn-choice">📜 SPELLEDARE</a>
-
-        <div class="footer">Drakar och Demoner Digitalt Verktyg</div>
+        <a href="spelare.html" class="btn-choice">🛡️ Spelare <span>(Karaktärsblad)</span></a>
+        <a href="sl.html" class="btn-choice">📜 Spelledare <span>(Verktygslåda)</span></a>
     </div>
 
 </body>
