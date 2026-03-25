@@ -153,7 +153,9 @@
 <body>
 
     <div class="room-bar">
-        <input type="text" id="roomName" class="room-input" placeholder="Rumsnamn (t.ex. Sveg123)" value="MittRum">
+        <input type="text" id="roomName" class="room-input" placeholder="Rumsnamn..." value="MittRum">
+        <button id="connectBtn" style="background: var(--accent-color); border: none; color: white; padding: 5px 15px; border-radius: 20px; cursor: pointer; font-weight: bold;">Anslut</button>
+        <span id="connectionStatus" style="font-size: 0.7rem; color: #666;">🔴 Ej ansluten</span>
         <a href="index.html" class="nav-link">🏠 Meny</a>
     </div>
 
@@ -246,9 +248,8 @@
     </div>
 
 <script type="module">
-    // FIREBASE SETUP
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-    import { getDatabase, ref, push, onChildAdded, serverTimestamp, query, limitToLast } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+    import { getDatabase, ref, push, onChildAdded, serverTimestamp, query, limitToLast, off } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyApQWEuMm5hCpp174145GgcdUOGEmfO2RU",
@@ -262,57 +263,54 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // LOKAL LOGIK (SPARA & RÄKNA)
-    const fields = document.querySelectorAll('.save-field');
-    
-    function calculateEverything() {
-        const getV = (id) => parseInt(document.getElementById(id).value) || 0;
-        const attr = { sty:getV('sty'), fys:getV('fys'), smi:getV('smi'), int:getV('int'), psy:getV('psy'), kar:getV('kar') };
+    const roomInp = document.getElementById('roomName');
+    const charInp = document.getElementById('charName');
+    const statusDot = document.getElementById('connectionStatus');
+    const connectBtn = document.getElementById('connectBtn');
+    const diceLog = document.getElementById('dice-history');
+    const diceResult = document.getElementById('dice-result');
 
-        document.getElementById('out-kp').innerText = attr.fys;
-        document.getElementById('out-vp').innerText = attr.psy;
-        document.getElementById('out-carry').innerText = Math.ceil(attr.sty / 2);
-        
-        const getBonus = (v) => v <= 12 ? "-" : (v <= 15 ? "+T4" : "+T6");
-        document.getElementById('out-dmg-sty').innerText = getBonus(attr.sty);
-        document.getElementById('out-dmg-smi').innerText = getBonus(attr.smi);
+    let currentRollsRef = null;
 
-        document.querySelectorAll('.skill-item:not(.skill-item-header)').forEach(row => {
-            const bSpan = row.querySelector('.skill-base');
-            const vDiv = row.querySelector('.skill-val');
-            const cb = row.querySelector('input[type="checkbox"]');
-            if (bSpan && vDiv && cb) {
-                const base = Math.max(3, Math.min(7, Math.floor((attr[bSpan.dataset.attr] - 1) / 3) + 2)); // Förenklad DoD-formel
-                bSpan.innerText = base;
-                vDiv.innerText = cb.checked ? base * 2 : base;
-            }
+    // --- ANSLUTNINGSLOGIK ---
+    function connectToRoom() {
+        const room = roomInp.value.trim();
+        if (!room) return alert("Skriv in ett rumsnamn!");
+
+        // Koppla bort gamla lyssnare om de finns
+        if (currentRollsRef) off(currentRollsRef);
+
+        const roomPath = `rooms/${room}/rolls`;
+        currentRollsRef = query(ref(db, roomPath), limitToLast(5));
+
+        // Bekräfta anslutning
+        statusDot.innerText = `🟢 Ansluten till: ${room}`;
+        statusDot.style.color = "#4ca300";
+        diceLog.innerText = "Väntar på nya slag i rummet...";
+
+        // Lyssna på nya slag
+        onChildAdded(currentRollsRef, (snapshot) => {
+            const data = snapshot.val();
+            // Visa vem som slog vad i loggen
+            diceLog.innerText = `${data.user} slog ${data.dice}: ${data.val}`;
+            // Visa det stora resultatet
+            diceResult.innerText = `${data.user}: ${data.val}`;
+            
+            // Liten animation för att visa att det hände något
+            diceResult.style.transform = "scale(1.2)";
+            setTimeout(() => { diceResult.style.transform = "scale(1)"; }, 200);
         });
     }
 
-    // Initiera sparning
-    fields.forEach(f => {
-        const saved = localStorage.getItem(f.id);
-        if (saved !== null) {
-            if (f.type === 'checkbox') f.checked = saved === 'true';
-            else f.value = saved;
-        }
-        f.addEventListener('input', () => {
-            localStorage.setItem(f.id, f.type === 'checkbox' ? f.checked : f.value);
-            calculateEverything();
-        });
-    });
+    connectBtn.onclick = connectToRoom;
 
-    calculateEverything();
-
-    // ONLINE LOGIK
-    const roomInp = document.getElementById('roomName');
-    const charInp = document.getElementById('charName');
-    let currentRoom = roomInp.value;
-
+    // --- TÄRNINGS-SLAG ---
     window.rollDice = function(sides) {
+        const name = charInp.value.trim() || "Okänd hjälte";
+        const room = roomInp.value.trim();
         const result = Math.floor(Math.random() * sides) + 1;
-        const name = charInp.value || "Okänd";
-        const room = roomInp.value || "Standard";
+
+        if (!room) return alert("Du måste ansluta till ett rum först!");
 
         // Skicka till Firebase
         push(ref(db, `rooms/${room}/rolls`), {
@@ -323,30 +321,50 @@
         });
     };
 
-    // Lyssna på tärningsslag
-    function startListening(room) {
-        const rollsRef = query(ref(db, `rooms/${room}/rolls`), limitToLast(1));
-        onChildAdded(rollsRef, (snapshot) => {
-            const data = snapshot.val();
-            document.getElementById('dice-log').innerText = `${data.user} slog ${data.dice}...`;
-            document.getElementById('dice-result').innerText = `${data.user}: ${data.val}`;
+    // Koppla tärningsknappar
+    document.querySelectorAll('.dice-btn').forEach(btn => {
+        btn.onclick = () => window.rollDice(btn.dataset.sides);
+    });
+
+    // --- BEHÅLL DIN GAMLA LOKALA LOGIK HÄR (Calculation & Save) ---
+    const fields = document.querySelectorAll('.save-field');
+    function calculateEverything() {
+        const getV = (id) => parseInt(document.getElementById(id).value) || 0;
+        const attr = { sty:getV('sty'), fys:getV('fys'), smi:getV('smi'), int:getV('int'), psy:getV('psy'), kar:getV('kar') };
+        document.getElementById('out-kp').innerText = attr.fys;
+        document.getElementById('out-vp').innerText = attr.psy;
+        document.getElementById('out-carry').innerText = Math.ceil(attr.sty / 2);
+        const getBonus = (v) => v <= 12 ? "-" : (v <= 15 ? "+T4" : "+T6");
+        document.getElementById('out-dmg-sty').innerText = getBonus(attr.sty);
+        document.getElementById('out-dmg-smi').innerText = getBonus(attr.smi);
+        document.querySelectorAll('.skill-item:not(.skill-item-header)').forEach(row => {
+            const bSpan = row.querySelector('.skill-base');
+            const vDiv = row.querySelector('.skill-val');
+            const cb = row.querySelector('input[type="checkbox"]');
+            if (bSpan && vDiv && cb) {
+                const base = Math.max(3, Math.min(7, Math.floor((attr[bSpan.dataset.attr] - 1) / 3) + 2));
+                bSpan.innerText = base;
+                vDiv.innerText = cb.checked ? base * 2 : base;
+            }
         });
     }
 
-    // Tärnings-UI
+    fields.forEach(f => {
+        const saved = localStorage.getItem(f.id);
+        if (saved !== null) { if (f.type === 'checkbox') f.checked = saved === 'true'; else f.value = saved; }
+        f.addEventListener('input', () => {
+            localStorage.setItem(f.id, f.type === 'checkbox' ? f.checked : f.value);
+            calculateEverything();
+        });
+    });
+    calculateEverything();
+
+    // Tärnings-UI toggle
     const tray = document.getElementById('diceTray');
     document.getElementById('diceToggle').onclick = () => {
         tray.classList.toggle('minimized');
         document.getElementById('diceToggle').innerText = tray.classList.contains('minimized') ? "▲" : "▼";
     };
-
-    document.querySelectorAll('.dice-btn').forEach(b => {
-        b.onclick = () => window.rollDice(b.dataset.sides);
-    });
-
-    startListening(currentRoom);
-    roomInp.onchange = () => startListening(roomInp.value);
-
 </script>
 </body>
 </html>
