@@ -84,6 +84,17 @@
     </style>
 </head>
 <body>
+    <div class="room-dropdown" id="roomMenu">
+        <div class="room-header" onclick="document.getElementById('roomMenu').classList.toggle('open')">
+            <span id="connectionStatus">🔴 Ej ansluten (Klicka här för att öppna rum)</span>
+            <span>▼</span>
+        </div>
+        <div class="room-content">
+            <input type="text" id="roomName" class="room-input" placeholder="Rumsnamn..." value="MittRum">
+            <button id="connectBtn" style="background: var(--accent-color); border: none; color: white; padding: 10px; border-radius: 20px; cursor: pointer; font-weight: bold;">Öppna Spelledarskärm</button>
+            <div class="user-list" id="userList">Anslutna spelare: -</div>
+        </div>
+    </div>
 
     <a href="index.html" class="nav-btn">🏠 Till Menyn</a>
 
