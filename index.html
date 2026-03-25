@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drakar och Demoner - Hub</title>
     <style>
+        /* DENNA RAD FIXAR KNAPPARNA */
+        * { box-sizing: border-box; }
+
         :root {
-            box-sizing: border-box,
             --bg-color: #121212;
             --accent-color: #4ca300;
             --text-color: #f0f0f0;
@@ -28,28 +30,26 @@
 
         .menu-card {
             background: rgba(20, 20, 20, 0.95);
-            padding: 50px 30px;
+            padding: 40px 30px;
             border-radius: 15px;
             border: 1px solid var(--accent-color);
             text-align: center;
             box-shadow: 0 0 40px rgba(0,0,0,0.8);
-            max-width: 450px;
+            max-width: 400px; /* Lite smalare för bättre fokus */
             width: 90%;
             backdrop-filter: blur(10px);
         }
 
-        h1 { margin-bottom: 10px; font-size: 2rem; letter-spacing: 1px; }
-        p { color: #888; margin-bottom: 40px; font-style: italic; }
+        h1 { margin-bottom: 10px; font-size: 1.8rem; letter-spacing: 1px; }
+        p { color: #888; margin-bottom: 30px; font-style: italic; font-size: 0.9rem; }
 
         .btn-choice {
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-direction: column; /* Lägger undertexten under ikonen/namnet */
-            gap: 5px;
             width: 100%;
-            padding: 15px;
-            margin: 10px 0;
+            padding: 18px;
+            margin: 12px 0;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--accent-color);
             color: white;
@@ -57,33 +57,22 @@
             font-size: 1.2rem;
             font-weight: bold;
             border-radius: 10px;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .btn-choice:hover {
             background: var(--accent-color);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(76, 163, 0, 0.4);
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(76, 163, 0, 0.3);
         }
-
-        .btn-choice span { 
-            font-size: 0.8rem; 
-            opacity: 0.7; 
-            font-weight: normal; 
-        }
-
-        .btn-choice span { font-size: 0.9rem; opacity: 0.7; font-weight: normal; }
     </style>
 </head>
 <body>
-
     <div class="menu-card">
         <h1>⚔️ Dragonbane Digital</h1>
         <p>Välj din roll vid bordet</p>
-        
         <a href="spelare.html" class="btn-choice">🛡️ Spelare</a>
         <a href="sl.html" class="btn-choice">📜 Spelledare</a>
     </div>
-
 </body>
 </html>
