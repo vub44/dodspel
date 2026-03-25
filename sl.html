@@ -132,77 +132,55 @@
         </div>
     </div>
 
-    <script>
-        // --- INITIATIV ---
-        function addInitRow() {
-            const container = document.getElementById('init-container');
-            const div = document.createElement('div');
-            div.className = 'init-row';
-            div.innerHTML = `
-                <input type="number" class="init-number" placeholder="10">
-                <input type="text" class="init-name" placeholder="Namn...">
-                <button onclick="this.parentElement.remove()" style="background:none; border:none; color:#666; cursor:pointer;">✕</button>
-            `;
-            container.appendChild(div);
-        }
-
-        function sortInitiative() {
-            const container = document.getElementById('init-container');
-            const rows = Array.from(container.querySelectorAll('.init-row'));
-            rows.sort((a, b) => (parseInt(a.querySelector('.init-number').value) || 99) - (parseInt(b.querySelector('.init-number').value) || 99));
-            rows.forEach(row => container.appendChild(row));
-        }
-
-        // --- MONSTER ---
-        function addMonster() {
-            const container = document.getElementById('monster-container');
-            const div = document.createElement('div');
-            div.className = 'monster-box';
-            div.innerHTML = `
-                <input type="text" placeholder="Fiende Namn" style="background:none; border:none; color:white; font-weight:bold; width:80%; border-bottom:1px solid #333;">
-                <div class="hp-controls">
-                    <span>KP</span>
-                    <button class="hp-btn" onclick="changeHP(this, -1)">-</button>
-                    <input type="number" value="10" style="width:45px; text-align:center; background:#111; color:var(--accent-color); border:1px solid #444; font-weight:bold;">
-                    <button class="hp-btn" onclick="changeHP(this, 1)">+</button>
-                    <button onclick="this.parentElement.parentElement.remove()" style="margin-left:auto; background:none; border:none; color:#555;">🗑️</button>
-                </div>
-            `;
-            container.appendChild(div);
-        }
-
-        function changeHP(btn, amt) {
-            const inp = btn.parentElement.querySelector('input');
-            inp.value = parseInt(inp.value) + amt;
-        }
-
-        // --- TÄRNINGAR (Samma logik som spelare) ---
-        let rollHistory = [];
-        function toggleDice() {
-            const tray = document.getElementById('diceTray');
-            const btn = document.querySelector('.dice-toggle');
-            tray.classList.toggle('minimized');
-            btn.innerText = tray.classList.contains('minimized') ? "▲" : "▼";
-        }
-
-        function rollDice(sides) {
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+        import { getDatabase, ref, push, onChildAdded, onValue, serverTimestamp, set, onDisconnect } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+    
+        const firebaseConfig = {
+            apiKey: "AIzaSyApQWEuMm5hCpp174145GgcdUOGEmfO2RU",
+            authDomain: "dodspel.firebaseapp.com",
+            projectId: "dodspel",
+            storageBucket: "dodspel.firebasestorage.app",
+            messagingSenderId: "708159282898",
+            appId: "1:708159282898:web:ae555d8212898d5a70970b"
+        };
+    
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const room = "MittRum"; // Du kan göra detta dynamiskt senare
+    
+        // --- ANSLUTNING ---
+        const myPresenceRef = ref(db, `rooms/${room}/users/Spelledare`);
+        set(myPresenceRef, { role: "GM", online: true });
+        onDisconnect(myPresenceRef).remove();
+    
+        // --- LYSSNA PÅ TÄRNINGSSLAG ---
+        const diceLog = document.getElementById('dice-history');
+        const diceResult = document.getElementById('dice-result');
+        const rollsRef = ref(db, `rooms/${room}/rolls`);
+    
+        onChildAdded(rollsRef, (snapshot) => {
+            const data = snapshot.val();
+            diceLog.innerText = `Logg: ${data.user} slog ${data.dice}`;
+            diceResult.innerText = `${data.user}: ${data.val}`;
+            // Liten visuell effekt
+            diceResult.style.color = "#ffcc00";
+            setTimeout(() => { diceResult.style.color = "var(--accent-color)"; }, 500);
+        });
+    
+        // --- SLÅ TÄRNING SOM SL ---
+        window.rollDice = function(sides) {
             const result = Math.floor(Math.random() * sides) + 1;
-            const resDisplay = document.getElementById('dice-result');
-            const histDisplay = document.getElementById('dice-history');
-            resDisplay.innerText = `T${sides}: ${result}`;
-            rollHistory.unshift(`T${sides}(${result})`);
-            if (rollHistory.length > 3) rollHistory.pop();
-            histDisplay.innerText = "Logg: " + rollHistory.join(" ← ");
-        }
-        function rollAllInitiative() {
-            const rows = document.querySelectorAll('.init-row');
-            rows.forEach(row => {
-                const input = row.querySelector('.init-number');
-                // Drakar och Demoner använder T10 för initiativ
-                input.value = Math.floor(Math.random() * 10) + 1;
+            push(ref(db, `rooms/${room}/rolls`), {
+                user: "Spelledaren",
+                dice: `T${sides}`,
+                val: result,
+                timestamp: serverTimestamp()
             });
-            sortInitiative(); // Sorterar automatiskt efteråt
-        }
+        };
+    
+        // Gör funktionerna tillgängliga för knapparna
+        window.toggleDice = () => document.getElementById('diceTray').classList.toggle('minimized');
     </script>
 </body>
 </html>
