@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DoD Karaktärsblad v8</title>
+    <title>DoD Karaktärsblad v8.1</title>
     <style>
         :root {
             --bg-color: #121212;
             --card-bg: rgba(40, 40, 40, 0.92);
             --text-color: #f0f0f0;
-            --accent-color: #4ca300; /* Din gröna färg */
+            --accent-color: #4ca300;
         }
 
         body {
@@ -17,7 +17,6 @@
             color: var(--text-color);
             margin: 0;
             padding: 0;
-            /* BAKGRUNDSBILD */
             background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('dragonbane_banner.jpg');
             background-size: cover;
             background-position: center;
@@ -35,7 +34,7 @@
 
         .container {
             max-width: 900px;
-            margin: 0 auto 140px auto; /* Plats för tärningspanelen */
+            margin: 0 auto 160px auto; 
             background: var(--card-bg);
             border: 1px solid var(--accent-color);
             border-radius: 12px;
@@ -54,7 +53,6 @@
 
         h3 { color: var(--accent-color); margin-top: 0; font-size: 1rem; text-transform: uppercase; border-bottom: 1px solid #444; padding-bottom: 5px; }
 
-        /* GRID-SYSTEM */
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
 
@@ -64,7 +62,6 @@
             .container { padding: 15px; width: 92%; }
         }
 
-        /* INPUTS */
         .input-group { display: flex; flex-direction: column; }
         label { font-size: 0.7rem; color: #aaa; text-transform: uppercase; margin-bottom: 4px; }
         input[type="text"], input[type="number"] {
@@ -73,16 +70,13 @@
         }
         input:focus { outline: none; border-color: var(--accent-color); background: #2a2a2a; }
 
-        /* GRUNDEGENSKAPER */
         .stat-box { background: #111; padding: 10px; border-radius: 6px; text-align: center; border: 1px solid #333; }
         .stat-box input { width: 100%; max-width: 60px; text-align: center; font-size: 1.4rem; font-weight: bold; background: transparent; border: none; border-bottom: 2px solid var(--accent-color); border-radius: 0; padding: 2px; }
 
-        /* BERÄKNADE VÄRDEN */
         .derived-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-top: 15px; }
         .derived-box { background: rgba(0,0,0,0.4); padding: 10px; border-radius: 6px; text-align: center; border: 1px solid #444; }
         .derived-val { font-size: 1.4rem; font-weight: bold; color: var(--accent-color); margin-top: 4px; }
 
-        /* FÄRDIGHETER */
         .skills-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
         .skill-item { display: grid; grid-template-columns: 2fr 45px 45px 45px; align-items: center; background: rgba(255,255,255,0.03); padding: 6px 10px; border-radius: 4px; margin-bottom: 4px; font-size: 0.9rem; }
         .skill-item:nth-child(even) { background: rgba(255,255,255,0.07); }
@@ -90,36 +84,36 @@
         .skill-val { font-weight: bold; color: var(--accent-color); text-align: center; }
         input[type="checkbox"] { accent-color: var(--accent-color); transform: scale(1.2); cursor: pointer; }
 
-        /* TÄRNINGSPANEL */
+        /* TÄRNINGSPANEL MED FIX */
         .dice-tray {
             position: fixed; bottom: 0; left: 0; right: 0;
             background: rgba(10, 10, 10, 0.98); border-top: 2px solid var(--accent-color);
             padding: 12px; display: flex; flex-direction: column; align-items: center;
             z-index: 2000; box-shadow: 0 -5px 30px rgba(0,0,0,0.9);
-            transition: transform 0.3s ease-in-out; /* Gör animationen mjuk */
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1); /* Snyggare animation */
         }
 
         .dice-tray.minimized {
-            transform: translateY(calc(100% - 40px)); /* Gömmer allt utom fliken */
+            transform: translateY(calc(100% - 45px)); /* Lämnar precis tillräckligt med plats för fliken */
         }
-        
+
         .dice-toggle {
             background: var(--accent-color);
             color: white;
-            width: 50px;
-            height: 25px;
+            width: 60px;
+            height: 30px;
             position: absolute;
-            top: -25px; /* Lägger knappen precis ovanför kanten */
+            top: -30px;
             right: 20px;
-            border-radius: 8px 8px 0 0;
+            border-radius: 10px 10px 0 0;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            font-size: 0.8rem;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+            font-size: 1rem;
+            box-shadow: 0 -3px 10px rgba(0,0,0,0.5);
         }
-        
+
         .dice-log { font-size: 0.75rem; color: #888; margin-bottom: 5px; font-style: italic; height: 18px; }
         .dice-result-big { font-size: 1.6rem; font-weight: bold; color: var(--accent-color); margin-bottom: 12px; text-shadow: 0 0 10px rgba(76, 163, 0, 0.4); }
         .dice-buttons { display: flex; gap: 8px; width: 100%; max-width: 500px; justify-content: center; }
@@ -155,12 +149,12 @@
         <div class="section">
             <h3>Grundegenskaper</h3>
             <div class="grid-6">
-                <div class="stat-box"><label title="Styrka">STY</label><br><input type="number" id="sty" class="save-field attr" value="10"></div>
-                <div class="stat-box"><label title="Fysik">FYS</label><br><input type="number" id="fys" class="save-field attr" value="10"></div>
-                <div class="stat-box"><label title="Smidighet">SMI</label><br><input type="number" id="smi" class="save-field attr" value="10"></div>
-                <div class="stat-box"><label title="Intelligens">INT</label><br><input type="number" id="int" class="save-field attr" value="10"></div>
-                <div class="stat-box"><label title="Psykraft">PSY</label><br><input type="number" id="psy" class="save-field attr" value="10"></div>
-                <div class="stat-box"><label title="Karisma">KAR</label><br><input type="number" id="kar" class="save-field attr" value="10"></div>
+                <div class="stat-box"><label>STY</label><br><input type="number" id="sty" class="save-field attr" value="10"></div>
+                <div class="stat-box"><label>FYS</label><br><input type="number" id="fys" class="save-field attr" value="10"></div>
+                <div class="stat-box"><label>SMI</label><br><input type="number" id="smi" class="save-field attr" value="10"></div>
+                <div class="stat-box"><label>INT</label><br><input type="number" id="int" class="save-field attr" value="10"></div>
+                <div class="stat-box"><label>PSY</label><br><input type="number" id="psy" class="save-field attr" value="10"></div>
+                <div class="stat-box"><label>KAR</label><br><input type="number" id="kar" class="save-field attr" value="10"></div>
             </div>
 
             <div class="derived-stats">
@@ -175,7 +169,7 @@
         <div class="skills-container">
             <div class="section">
                 <h3>Allmänna Färdigheter</h3>
-                <div class="skill-item skill-item-header"><div>Färdighet</div><div style="text-align:center;">G</div><div style="text-align:center;">T</div><div style="text-align:center;">V</div></div>
+                <div class="skill-item skill-item-header"><div>Färdighet</div><div>G</div><div>T</div><div>V</div></div>
                 <div class="skill-item"><div>Dyrka lås (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-lock" class="save-field"><div class="skill-val">3</div></div>
                 <div class="skill-item"><div>Fingerfärdighet (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-sleight" class="save-field"><div class="skill-val">3</div></div>
                 <div class="skill-item"><div>Hantverk (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-craft" class="save-field"><div class="skill-val">3</div></div>
@@ -194,7 +188,7 @@
 
             <div class="section">
                 <h3>Vapenfärdigheter</h3>
-                <div class="skill-item skill-item-header"><div>Färdighet</div><div style="text-align:center;">G</div><div style="text-align:center;">T</div><div style="text-align:center;">V</div></div>
+                <div class="skill-item skill-item-header"><div>Färdighet</div><div>G</div><div>T</div><div>V</div></div>
                 <div class="skill-item"><div>Armborst (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-xbow" class="save-field"><div class="skill-val">3</div></div>
                 <div class="skill-item"><div>Båge (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-bow" class="save-field"><div class="skill-val">3</div></div>
                 <div class="skill-item"><div>Kastvapen (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-throw" class="save-field"><div class="skill-val">3</div></div>
@@ -208,10 +202,10 @@
             </div>
         </div>
 
-        <div class="save-banner">💾 Sparas automatiskt i din webbläsare.</div>
+        <div class="save-banner">💾 Sparas lokalt i webbläsaren.</div>
     </div>
 
-    <div class="dice-tray">
+    <div class="dice-tray" id="diceTray">
         <div class="dice-toggle" onclick="toggleDice()">▼</div>
         <div id="dice-history" class="dice-log">Logg: Tom...</div>
         <div id="dice-result" class="dice-result-big">Klar att slå</div>
@@ -229,28 +223,30 @@
     const fields = document.querySelectorAll('.save-field');
     let rollHistory = [];
 
-    // Tärningsslag
+    function toggleDice() {
+        const tray = document.getElementById('diceTray');
+        const btn = document.querySelector('.dice-toggle');
+        tray.classList.toggle('minimized');
+        btn.innerText = tray.classList.contains('minimized') ? "▲" : "▼";
+    }
+
     function rollDice(sides) {
         const result = Math.floor(Math.random() * sides) + 1;
         const resDisplay = document.getElementById('dice-result');
         const histDisplay = document.getElementById('dice-history');
-
         let text = `T${sides}: ${result}`;
         if (sides === 20) {
             if (result === 1) text = "🔥 PERFEKT (1)";
             if (result === 20) text = "💀 KATASTROF (20)";
         }
-
         resDisplay.innerText = text;
         rollHistory.unshift(`T${sides}(${result})`);
         if (rollHistory.length > 3) rollHistory.pop();
         histDisplay.innerText = "Logg: " + rollHistory.join(" ← ");
-
         resDisplay.style.transform = "scale(1.1)";
         setTimeout(() => resDisplay.style.transform = "scale(1)", 100);
     }
 
-    // Laddar data vid start
     window.addEventListener('load', () => {
         fields.forEach(field => {
             const savedValue = localStorage.getItem(field.id);
@@ -262,42 +258,31 @@
         calculateEverything();
     });
 
-    // Sparar vid ändring
     fields.forEach(field => {
         field.addEventListener('input', () => {
-            const val = field.type === 'checkbox' ? field.checked : field.value;
-            localStorage.setItem(field.id, val);
+            localStorage.setItem(field.id, field.type === 'checkbox' ? field.checked : field.value);
             calculateEverything();
         });
     });
 
-    // Beräkningar
     function calculateEverything() {
-        const sty = parseInt(document.getElementById('sty').value) || 0;
-        const fys = parseInt(document.getElementById('fys').value) || 0;
-        const smi = parseInt(document.getElementById('smi').value) || 0;
-        const int = parseInt(document.getElementById('int').value) || 0;
-        const psy = parseInt(document.getElementById('psy').value) || 0;
-        const kar = parseInt(document.getElementById('kar').value) || 0;
+        const getV = (id) => parseInt(document.getElementById(id).value) || 0;
+        const attributes = { sty:getV('sty'), fys:getV('fys'), smi:getV('smi'), int:getV('int'), psy:getV('psy'), kar:getV('kar') };
 
-        const attributes = { sty, fys, smi, int, psy, kar };
-
-        document.getElementById('out-kp').innerText = fys;
-        document.getElementById('out-vp').innerText = psy;
-        document.getElementById('out-carry').innerText = Math.ceil(sty / 2);
+        document.getElementById('out-kp').innerText = attributes.fys;
+        document.getElementById('out-vp').innerText = attributes.psy;
+        document.getElementById('out-carry').innerText = Math.ceil(attributes.sty / 2);
         
         const getBonus = (val) => val <= 12 ? "-" : (val <= 15 ? "+T4" : "+T6");
-        document.getElementById('out-dmg-sty').innerText = getBonus(sty);
-        document.getElementById('out-dmg-smi').innerText = getBonus(smi);
+        document.getElementById('out-dmg-sty').innerText = getBonus(attributes.sty);
+        document.getElementById('out-dmg-smi').innerText = getBonus(attributes.smi);
 
         document.querySelectorAll('.skill-item:not(.skill-item-header)').forEach(row => {
             const baseSpan = row.querySelector('.skill-base');
             const totalDiv = row.querySelector('.skill-val');
             const checkbox = row.querySelector('input[type="checkbox"]');
-
             if (baseSpan && totalDiv && checkbox) {
-                const attrVal = attributes[baseSpan.getAttribute('data-attr')];
-                const base = getBaseValue(attrVal);
+                const base = getBaseValue(attributes[baseSpan.getAttribute('data-attr')]);
                 baseSpan.innerText = base;
                 totalDiv.innerText = checkbox.checked ? base * 2 : base;
             }
@@ -311,21 +296,6 @@
         if (val <= 15) return 6;
         return 7;
     }
-
-    function toggleDice() {
-        const tray = document.getElementById('diceTray');
-        const btn = document.querySelector('.dice-toggle');
-        
-        tray.classList.toggle('minimized');
-        
-        // Byt pilen beroende på läge
-        if (tray.classList.contains('minimized')) {
-            btn.innerText = "▲";
-        } else {
-            btn.innerText = "▼";
-        }
-    }
 </script>
-
 </body>
 </html>
