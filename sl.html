@@ -93,6 +93,7 @@
             <h2>⚔️ Initiativordning</h2>
             <div id="init-container"></div>
             <button class="add-btn" onclick="addInitRow()">+ Deltagare</button>
+            <button class="add-btn" style="background:#2b5797; margin-top:5px;" onclick="rollAllInitiative()">🎲 Slumpa alla (T10)</button>
             <button class="add-btn" style="background:#444;" onclick="sortInitiative()">Sortera (Lägst först)</button>
         </div>
 
@@ -192,6 +193,15 @@
             rollHistory.unshift(`T${sides}(${result})`);
             if (rollHistory.length > 3) rollHistory.pop();
             histDisplay.innerText = "Logg: " + rollHistory.join(" ← ");
+        }
+        function rollAllInitiative() {
+            const rows = document.querySelectorAll('.init-row');
+            rows.forEach(row => {
+                const input = row.querySelector('.init-number');
+                // Drakar och Demoner använder T10 för initiativ
+                input.value = Math.floor(Math.random() * 10) + 1;
+            });
+            sortInitiative(); // Sorterar automatiskt efteråt
         }
     </script>
 </body>
