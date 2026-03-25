@@ -96,7 +96,30 @@
             background: rgba(10, 10, 10, 0.98); border-top: 2px solid var(--accent-color);
             padding: 12px; display: flex; flex-direction: column; align-items: center;
             z-index: 2000; box-shadow: 0 -5px 30px rgba(0,0,0,0.9);
+            transition: transform 0.3s ease-in-out; /* Gör animationen mjuk */
         }
+
+        .dice-tray.minimized {
+            transform: translateY(calc(100% - 40px)); /* Gömmer allt utom fliken */
+        }
+        
+        .dice-toggle {
+            background: var(--accent-color);
+            color: white;
+            width: 50px;
+            height: 25px;
+            position: absolute;
+            top: -25px; /* Lägger knappen precis ovanför kanten */
+            right: 20px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+        }
+        
         .dice-log { font-size: 0.75rem; color: #888; margin-bottom: 5px; font-style: italic; height: 18px; }
         .dice-result-big { font-size: 1.6rem; font-weight: bold; color: var(--accent-color); margin-bottom: 12px; text-shadow: 0 0 10px rgba(76, 163, 0, 0.4); }
         .dice-buttons { display: flex; gap: 8px; width: 100%; max-width: 500px; justify-content: center; }
@@ -189,6 +212,7 @@
     </div>
 
     <div class="dice-tray">
+        <div class="dice-toggle" onclick="toggleDice()">▼</div>
         <div id="dice-history" class="dice-log">Logg: Tom...</div>
         <div id="dice-result" class="dice-result-big">Klar att slå</div>
         <div class="dice-buttons">
@@ -286,6 +310,20 @@
         if (val <= 12) return 5;
         if (val <= 15) return 6;
         return 7;
+    }
+
+    function toggleDice() {
+        const tray = document.getElementById('diceTray');
+        const btn = document.querySelector('.dice-toggle');
+        
+        tray.classList.toggle('minimized');
+        
+        // Byt pilen beroende på läge
+        if (tray.classList.contains('minimized')) {
+            btn.innerText = "▲";
+        } else {
+            btn.innerText = "▼";
+        }
     }
 </script>
 
