@@ -6,6 +6,7 @@
     <title>Drakar och Demoner - Hub</title>
     <style>
         :root {
+            box-sizing: border-box,
             --bg-color: #121212;
             --accent-color: #4ca300;
             --text-color: #f0f0f0;
@@ -44,24 +45,31 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            flex-direction: column; /* Lägger undertexten under ikonen/namnet */
+            gap: 5px;
             width: 100%;
-            padding: 22px;
-            margin: 15px 0;
-            background: rgba(255,255,255,0.03);
+            padding: 15px;
+            margin: 10px 0;
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--accent-color);
             color: white;
             text-decoration: none;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: bold;
             border-radius: 10px;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s ease;
         }
 
         .btn-choice:hover {
             background: var(--accent-color);
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(76, 163, 0, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(76, 163, 0, 0.4);
+        }
+
+        .btn-choice span { 
+            font-size: 0.8rem; 
+            opacity: 0.7; 
+            font-weight: normal; 
         }
 
         .btn-choice span { font-size: 0.9rem; opacity: 0.7; font-weight: normal; }
