@@ -26,7 +26,7 @@
             background-color: var(--bg-color);
         }
 
-        /* --- NY MOBILVÄNLIG DROPDOWN FÖR RUM --- */
+        /* --- DROPDOWN RUM --- */
         .room-dropdown {
             position: fixed; top: 0; left: 0; right: 0; z-index: 4000;
             background: rgba(0, 0, 0, 0.95); border-bottom: 1px solid var(--accent-color);
@@ -37,17 +37,11 @@
         .room-header { height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; cursor: pointer; }
         .room-content { padding: 10px 20px 20px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #333; }
         
-        .user-list { font-size: 0.75rem; color: #888; margin-top: 5px; }
-        .user-badge { display: inline-block; background: #222; padding: 2px 8px; border-radius: 10px; margin: 2px; border: 1px solid #444; color: var(--accent-color); }
-
-        .room-input {
-            background: #111; border: 1px solid var(--accent-color); color: white;
-            padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; outline: none;
-        }
-
+        .user-badge { display: inline-block; background: #222; padding: 2px 8px; border-radius: 10px; margin: 2px; border: 1px solid #444; color: var(--accent-color); font-size: 0.8rem; }
+        .room-input { background: #111; border: 1px solid var(--accent-color); color: white; padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; outline: none; }
         .nav-link { color: var(--accent-color); text-decoration: none; font-size: 0.8rem; }
 
-        /* --- BEHÅLL DIN DESIGN --- */
+        /* --- DESIGN --- */
         .page-header { text-align: center; padding: 70px 20px 10px; text-shadow: 2px 2px 8px rgba(0,0,0,1); }
         .page-header h1 { margin: 0; font-size: 2.2rem; letter-spacing: 2px; }
         .page-header h2 { margin: 5px 0 0; color: var(--accent-color); font-size: 1.1rem; text-transform: uppercase; }
@@ -68,14 +62,11 @@
         @media (max-width: 700px) {
             .grid-3 { grid-template-columns: 1fr; }
             .grid-6 { grid-template-columns: repeat(3, 1fr); }
-            .container { padding: 15px; width: 92%; }
         }
 
         .input-group { display: flex; flex-direction: column; }
         label { font-size: 0.7rem; color: #aaa; text-transform: uppercase; margin-bottom: 4px; }
-        input[type="text"], input[type="number"] {
-            background: #222; border: 1px solid #444; color: white; padding: 10px; border-radius: 4px; font-size: 1rem;
-        }
+        input[type="text"], input[type="number"] { background: #222; border: 1px solid #444; color: white; padding: 10px; border-radius: 4px; font-size: 1rem; }
 
         .stat-box { background: #111; padding: 10px; border-radius: 6px; text-align: center; border: 1px solid #333; }
         .stat-box input { width: 100%; max-width: 60px; text-align: center; font-size: 1.4rem; font-weight: bold; background: transparent; border: none; border-bottom: 2px solid var(--accent-color); color: white; }
@@ -85,44 +76,38 @@
         .derived-val { font-size: 1.4rem; font-weight: bold; color: var(--accent-color); margin-top: 4px; }
 
         .skill-item { display: grid; grid-template-columns: 2fr 45px 45px 45px; align-items: center; background: rgba(255,255,255,0.03); padding: 6px 10px; border-radius: 4px; margin-bottom: 4px; font-size: 0.9rem; }
+        .skill-item-header { font-weight: bold; color: #888; border-bottom: 1px solid #333; margin-bottom: 8px; }
         .skill-val { font-weight: bold; color: var(--accent-color); text-align: center; }
 
+        /* --- ACTION BAR --- */
         .dice-tray {
             position: fixed; bottom: 0; left: 0; right: 0;
             background: rgba(10, 10, 10, 0.98); border-top: 2px solid var(--accent-color);
             padding: 12px; display: flex; flex-direction: column; align-items: center;
-            z-index: 2000; transition: transform 0.4s;
+            z-index: 2000; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
         }
         .dice-tray.minimized { transform: translateY(calc(100% - 5px)); }
         .dice-toggle {
-            background: var(--accent-color); color: white; width: 80px; height: 25px;
+            background: var(--accent-color); color: white; width: 100px; height: 25px;
             position: absolute; top: -25px; right: 20px; border-radius: 8px 8px 0 0;
-            display: flex; justify-content: center; align-items: center; cursor: pointer; font-weight: bold; font-size: 0.8rem;
+            display: flex; justify-content: center; align-items: center; cursor: pointer; font-weight: bold; font-size: 0.75rem;
         }
-        .dice-result-big { font-size: 1.6rem; font-weight: bold; color: var(--accent-color); margin-bottom: 12px; }
-        .dice-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 400px; }
-        .dice-btn { background: #222; border: 1px solid var(--accent-color); color: white; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
 
         .tab-buttons { display: flex; width: 100%; border-bottom: 1px solid #333; margin-bottom: 10px; }
-        .tab-btn { 
-            flex: 1; background: none; border: none; color: #888; padding: 10px; 
-            cursor: pointer; font-weight: bold; font-size: 0.8rem; 
-        }
+        .tab-btn { flex: 1; background: none; border: none; color: #888; padding: 10px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
         .tab-btn.active { color: var(--accent-color); border-bottom: 2px solid var(--accent-color); }
         .tab-content { display: none; width: 100%; flex-direction: column; align-items: center; }
         .tab-content.active { display: flex; }
-    
-        .log-container { 
-            width: 100%; max-height: 120px; overflow-y: auto; 
-            font-size: 0.85rem; text-align: left; padding: 5px;
-        }
-        .log-entry { 
-            padding: 4px 8px; border-bottom: 1px solid #222; 
-            display: flex; justify-content: space-between; 
-        }
-        .log-perfect { color: #ffd700; font-weight: bold; text-shadow: 0 0 5px rgba(255,215,0,0.5); }
+
+        .dice-result-big { font-size: 1.6rem; font-weight: bold; color: var(--accent-color); margin-bottom: 10px; min-height: 40px; }
+        .dice-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 400px; }
+        .dice-btn { background: #222; border: 1px solid var(--accent-color); color: white; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        
+        .log-container { width: 100%; max-height: 120px; overflow-y: auto; font-size: 0.85rem; padding: 5px; }
+        .log-entry { padding: 6px 10px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; }
+        .log-perfect { color: #ffd700; font-weight: bold; }
         .log-fail { color: #ff4444; font-weight: bold; }
-        .quick-stats { display: flex; gap: 20px; font-weight: bold; font-size: 1.1rem; padding: 10px; }
+        .quick-stats { display: flex; gap: 20px; font-weight: bold; font-size: 1.1rem; padding: 15px; color: var(--accent-color); }
     </style>
 </head>
 <body>
@@ -206,41 +191,39 @@
                 <div class="skill-item"><div>Yxa (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-axe" class="save-field"><div class="skill-val">3</div></div>
             </div>
         </div>
-
-        <div class="save-banner">💾 Sparas lokalt. Tärningsslag delas online.</div>
+        <div class="save-banner">💾 Spara sker automatiskt lokalt och mot SL-skärmen.</div>
     </div>
 
     <div class="dice-tray minimized" id="actionTray">
-        <div class="dice-toggle" onclick="toggleDice()">▲ MENU</div>
+        <div class="dice-toggle" id="diceToggle">▲ MENU</div>
         
         <div class="tab-buttons">
-            <button class="tab-btn active" onclick="showTab('dice')">🎲 Slå</button>
-            <button class="tab-btn" onclick="showTab('log')">📜 Logg</button>
-            <button class="tab-btn" onclick="showTab('status')">🛡️ Status</button>
+            <button class="tab-btn active" id="btn-dice">🎲 Slå</button>
+            <button class="tab-btn" id="btn-log">📜 Logg</button>
+            <button class="tab-btn" id="btn-status">🛡️ Status</button>
         </div>
     
         <div id="tab-dice" class="tab-content active">
-            <div id="dice-result" class="dice-result-big">Gör ditt drag</div>
+            <div id="dice-result" class="dice-result-big">Klar att slå</div>
             <div class="dice-buttons">
-                <button class="dice-btn" onclick="rollDice(4)">T4</button>
-                <button class="dice-btn" onclick="rollDice(6)">T6</button>
-                <button class="dice-btn" onclick="rollDice(8)">T8</button>
-                <button class="dice-btn" onclick="rollDice(10)">T10</button>
-                <button class="dice-btn" onclick="rollDice(12)">T12</button>
-                <button class="dice-btn" onclick="rollDice(20)">T20</button>
+                <button class="dice-btn" data-sides="4">T4</button>
+                <button class="dice-btn" data-sides="6">T6</button>
+                <button class="dice-btn" data-sides="8">T8</button>
+                <button class="dice-btn" data-sides="10">T10</button>
+                <button class="dice-btn" data-sides="12">T12</button>
+                <button class="dice-btn" data-sides="20">T20</button>
             </div>
         </div>
     
         <div id="tab-log" class="tab-content">
-            <div id="dice-history-list" class="log-container">
-                </div>
+            <div id="dice-history-list" class="log-container"></div>
         </div>
     
         <div id="tab-status" class="tab-content">
             <div class="quick-stats">
-                <div>❤️ KP: <span id="stat-kp">0</span></div>
-                <div>✨ VP: <span id="stat-vp">0</span></div>
-                <div>🎒 Bär: <span id="stat-carry">0</span></div>
+                <div>❤️ <span id="stat-kp">0</span></div>
+                <div>✨ <span id="stat-vp">0</span></div>
+                <div>🎒 <span id="stat-carry">0</span></div>
             </div>
         </div>
     </div>
@@ -266,61 +249,15 @@
     const charInp = document.getElementById('charName');
     const statusTxt = document.getElementById('connectionStatus');
     const userListDiv = document.getElementById('userList');
-    const diceLog = document.getElementById('dice-history');
     const diceResult = document.getElementById('dice-result');
+    const logList = document.getElementById('dice-history-list');
 
-    let currentRollsRef = null;
-
-    // --- ANSLUTNINGSLOGIK ---
-    window.connectToRoom = function() {
-        const room = roomInp.value.trim();
-        const name = charInp.value.trim() || "Anonym";
-        if (!room) return alert("Skriv in rumsnamn!");
-
-        if (currentRollsRef) off(currentRollsRef);
-
-        // 1. Markera närvaro
-        const myPresenceRef = ref(db, `rooms/${room}/users/${name}`);
-        set(myPresenceRef, true);
-        onDisconnect(myPresenceRef).remove();
-
-        // 2. Lyssna på användare
-        onValue(ref(db, `rooms/${room}/users`), (snapshot) => {
-            const users = snapshot.val() ? Object.keys(snapshot.val()) : [];
-            userListDiv.innerHTML = "Anslutna: " + users.map(u => `<span class="user-badge">${u}</span>`).join('');
-        });
-
-        // 3. Lyssna på slag
-        currentRollsRef = query(ref(db, `rooms/${room}/rolls`), limitToLast(1));
-        onChildAdded(currentRollsRef, (snapshot) => {
-            const data = snapshot.val();
-            diceLog.innerText = `${data.user} slog ${data.dice}...`;
-            diceResult.innerText = `${data.user}: ${data.val}`;
-            diceResult.style.transform = "scale(1.2)";
-            setTimeout(() => { diceResult.style.transform = "scale(1)"; }, 200);
-        });
-
-        statusTxt.innerText = `🟢 Rum: ${room}`;
-        window.syncSheetToFirebase(); 
-    
-        document.getElementById('roomMenu').classList.remove('open');
-        statusTxt.style.color = "#4ca300";
-        document.getElementById('roomMenu').classList.remove('open');
-    };
-
-    document.getElementById('connectBtn').onclick = connectToRoom;
-
+    // --- FLIK-SYSTEM ---
     window.showTab = function(tabName) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        
-        const targetTab = document.getElementById('tab-' + tabName);
-        if (targetTab) targetTab.classList.add('active');
-        
-        // Hitta knappen som klickades på (om det var ett klick-event)
-        if (event && event.currentTarget) {
-            event.currentTarget.classList.add('active');
-        }
+        document.getElementById('tab-' + tabName).classList.add('active');
+        document.getElementById('btn-' + tabName).classList.add('active');
 
         if(tabName === 'status') {
             document.getElementById('stat-kp').innerText = document.getElementById('out-kp').innerText;
@@ -328,83 +265,102 @@
             document.getElementById('stat-carry').innerText = document.getElementById('out-carry').innerText;
         }
     };
-    
+
+    document.getElementById('btn-dice').onclick = () => showTab('dice');
+    document.getElementById('btn-log').onclick = () => showTab('log');
+    document.getElementById('btn-status').onclick = () => showTab('status');
+
+    // --- ANSLUTNING ---
+    window.connectToRoom = function() {
+        const room = roomInp.value.trim();
+        const name = charInp.value.trim() || "Anonym";
+        if (!room) return alert("Skriv in rumsnamn!");
+
+        const myPresenceRef = ref(db, `rooms/${room}/users/${name}`);
+        set(myPresenceRef, true);
+        onDisconnect(myPresenceRef).remove();
+
+        onValue(ref(db, `rooms/${room}/users`), (snapshot) => {
+            const users = snapshot.val() ? Object.keys(snapshot.val()) : [];
+            userListDiv.innerHTML = "Anslutna: " + users.map(u => `<span class="user-badge">${u}</span>`).join('');
+        });
+
+        const rollsRef = ref(db, `rooms/${room}/rolls`);
+        onChildAdded(query(rollsRef, limitToLast(20)), (snapshot) => {
+            const data = snapshot.val();
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            let special = "";
+            if (data.dice === "T20" && data.val === 1) special = "log-perfect";
+            if (data.dice === "T20" && data.val === 20) special = "log-fail";
+            entry.innerHTML = `<span><strong>${data.user}</strong> (${data.dice})</span><span class="${special}">${data.val}</span>`;
+            logList.insertBefore(entry, logList.firstChild);
+            diceResult.innerText = `${data.user}: ${data.val}`;
+        });
+
+        statusTxt.innerText = `🟢 Rum: ${room}`;
+        statusTxt.style.color = "#4ca300";
+        window.syncSheetToFirebase(); 
+        document.getElementById('roomMenu').classList.remove('open');
+    };
+
+    document.getElementById('connectBtn').onclick = connectToRoom;
+
     // --- TÄRNINGAR ---
     window.rollDice = function(sides) {
         const name = charInp.value.trim() || "Anonym";
         const room = roomInp.value.trim();
+        if (!statusTxt.innerText.includes("🟢")) return alert("Anslut till ett rum först!");
         const result = Math.floor(Math.random() * sides) + 1;
-
-        if (!statusTxt.innerText.includes("Rum:")) return alert("Anslut till ett rum först!");
-
-        push(ref(db, `rooms/${room}/rolls`), {
-            user: name, dice: `T${sides}`, val: result, timestamp: serverTimestamp()
-        });
+        push(ref(db, `rooms/${room}/rolls`), { user: name, dice: `T${sides}`, val: result, timestamp: serverTimestamp() });
     };
 
     document.querySelectorAll('.dice-btn').forEach(btn => {
-        btn.onclick = () => window.rollDice(btn.dataset.sides);
+        btn.onclick = () => window.rollDice(parseInt(btn.dataset.sides));
     });
 
-    // --- BERÄKNINGAR OCH SPARNING ---
-    const fields = document.querySelectorAll('.save-field');
+    // --- BERÄKNINGAR ---
     function calculate() {
         const getV = (id) => parseInt(document.getElementById(id).value) || 0;
         const attr = { sty:getV('sty'), fys:getV('fys'), smi:getV('smi'), int:getV('int'), psy:getV('psy'), kar:getV('kar') };
         
-        // Grundegenskaper och bärförmåga
         document.getElementById('out-kp').innerText = attr.fys;
         document.getElementById('out-vp').innerText = attr.psy;
         document.getElementById('out-carry').innerText = Math.ceil(attr.sty / 2);
         
-        // Skadebonus
         const getBonus = (v) => v <= 12 ? "-" : (v <= 15 ? "+T4" : "+T6");
         document.getElementById('out-dmg-sty').innerText = getBonus(attr.sty);
         document.getElementById('out-dmg-smi').innerText = getBonus(attr.smi);
     
-        // Färdigheter
         document.querySelectorAll('.skill-item:not(.skill-item-header)').forEach(row => {
             const bSpan = row.querySelector('.skill-base');
             const vDiv = row.querySelector('.skill-val');
             const cb = row.querySelector('input[type="checkbox"]');
             if (bSpan && vDiv && cb) {
-                // Beräkna basvärde enligt DoD-regler
-                const base = Math.max(3, Math.min(7, Math.floor((attr[bSpan.dataset.attr] - 1) / 3) + 2));
+                const attrVal = attr[bSpan.dataset.attr] || 0;
+                const base = Math.max(3, Math.min(7, Math.floor((attrVal - 1) / 3) + 2));
                 bSpan.innerText = base;
                 vDiv.innerText = cb.checked ? base * 2 : base;
             }
         });
-        
-        // SYNKRUERING TILL FIREBASE
-        // Vi kollar om statusTxt finns och är grön innan vi försöker synka
-        const statusTxt = document.getElementById('connectionStatus');
-        if (statusTxt && statusTxt.innerText.includes("🟢")) {
-            // Om du har skapat syncSheetToFirebase-funktionen använder vi den:
-            if (window.syncSheetToFirebase) {
-                window.syncSheetToFirebase();
-            } 
-        }
+        window.syncSheetToFirebase();
     }
 
     window.syncSheetToFirebase = function() {
-        const room = document.getElementById('roomName').value.trim();
-        const charName = document.getElementById('charName').value.trim() || "Anonym";
-        
-        // Kontrollera att vi faktiskt är anslutna (statusen bör vara grön)
+        const room = roomInp.value.trim();
+        const charName = charInp.value.trim() || "Anonym";
         if (room && statusTxt.innerText.includes("🟢")) {
-            const sheetRef = ref(db, `rooms/${room}/sheets/${charName}`);
-            
-            set(sheetRef, {
+            set(ref(db, `rooms/${room}/sheets/${charName}`), {
                 kp: document.getElementById('out-kp').innerText,
                 vp: document.getElementById('out-vp').innerText,
                 profession: document.getElementById('profession').value,
                 lastUpdate: serverTimestamp()
             });
-            console.log("Karaktärsblad synkat!");
         }
     };
 
-    fields.forEach(f => {
+    // --- LOCAL STORAGE & INIT ---
+    document.querySelectorAll('.save-field').forEach(f => {
         const saved = localStorage.getItem(f.id);
         if (saved !== null) { if (f.type === 'checkbox') f.checked = saved === 'true'; else f.value = saved; }
         f.addEventListener('input', () => {
@@ -416,7 +372,7 @@
     calculate();
 
     document.getElementById('diceToggle').onclick = () => {
-        document.getElementById('diceTray').classList.toggle('minimized');
+        document.getElementById('actionTray').classList.toggle('minimized');
     };
 </script>
 </body>
