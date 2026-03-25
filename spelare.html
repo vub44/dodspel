@@ -150,91 +150,40 @@
             </div>
         </div>
 
-        <div class="section">
-            <h3>Allmänna Färdigheter</h3>
-            <div class="skill-item skill-item-header">
-                <span>Tränad</span>
-                <span style="flex:1">Färdighet</span>
-                <span>Bas</span>
-                <span>Värde</span>
+        <div class="skills-container">
+            <div class="section">
+                <h3>Allmänna Färdigheter</h3>
+                <div class="skill-item skill-item-header"><div>Färdighet</div><div>G</div><div>T</div><div>V</div></div>
+                <div class="skill-item"><div>Dyrka lås (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-lock" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Fingerfärdighet (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-sleight" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Hantverk (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-craft" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Hoppa & Klättra (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-jump" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Kulturkännedom (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-culture" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Läkekonst (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-medicine" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Lärdom (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-lore" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Rida (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-ride" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Sjökunnighet (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-sea" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Smyga (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-stealth" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Undvika (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-dodge" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Uppmärksamhet (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-spot" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Överlevnad (INT)</div><div class="skill-base" data-attr="int">3</div><input type="checkbox" id="t-survive" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Övertala (KAR)</div><div class="skill-base" data-attr="kar">3</div><input type="checkbox" id="t-persuade" class="save-field"><div class="skill-val">3</div></div>
             </div>
-        
-            <div class="skill-item">
-                <input type="checkbox" onchange="calculate()">
-                <span class="skill-name">Akrobatik (SMI)</span>
-                <span class="skill-base" data-attr="smi">3</span>
-                <div class="skill-val">3</div>
+
+            <div class="section">
+                <h3>Vapenfärdigheter</h3>
+                <div class="skill-item skill-item-header"><div>Färdighet</div><div>G</div><div>T</div><div>V</div></div>
+                <div class="skill-item"><div>Armborst (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-xbow" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Båge (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-bow" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Kastvapen (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-throw" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Klubba (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-mace" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Kniv (SMI)</div><div class="skill-base" data-attr="smi">3</div><input type="checkbox" id="t-knife" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Sköld (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-shield" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Slagsmål (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-brawl" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Spjut (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-spear" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Svärd (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-sword" class="save-field"><div class="skill-val">3</div></div>
+                <div class="skill-item"><div>Yxa (STY)</div><div class="skill-base" data-attr="sty">3</div><input type="checkbox" id="t-axe" class="save-field"><div class="skill-val">3</div></div>
             </div>
-            <div class="skill-item">
-                <input type="checkbox" onchange="calculate()">
-                <span class="skill-name">Fingerfärdighet (SMI)</span>
-                <span class="skill-base" data-attr="smi">3</span>
-                <div class="skill-val">3</div>
-            </div>
-            <div class="skill-item">
-                <input type="checkbox" onchange="calculate()">
-                <span class="skill-name">Smyga (SMI)</span>
-                <span class="skill-base" data-attr="smi">3</span>
-                <div class="skill-val">3</div>
-            </div>
-            <div class="skill-item">
-                <input type="checkbox" onchange="calculate()">
-                <span class="skill-name">Hoppa & Klättra (SMI)</span>
-                <span class="skill-base" data-attr="smi">3</span>
-                <div class="skill-val">3</div>
-            </div>
-        
-            <div class="skill-item">
-                <input type="checkbox" onchange="calculate()">
-                <span class="skill-name">Lärdom (INT)</span>
-                <span class="skill-base" data-attr="int">3</span>
-                <div class="skill-val">3</div>
-            </div>
-            <div class="skill-item">
-                <input type="checkbox" onchange="calculate()">
-                <span class="skill-name">Sjukvård (INT)</span>
-                <span class="skill-base" data-attr="int">3</span>
-                <div class="skill-val">3</div>
-            </div>
-            <div class="skill-item">
-                <input type="checkbox" onchange="calculate()">
-                <span class="skill-name">Sjömannaskap (INT)</span>
-                <span class="skill-base" data-attr="int">3</span>
-                <div class="skill-val">3</div>
-            </div>
-        
-            <div class="skill-item">
-                <input type="checkbox" onchange="calculate()">
-                <span class="skill-name">Speja (INT)</span>
-                <span class="skill-base" data-attr="int">3</span>
-                <div class="skill-val">3</div>
-            </div>
-            <div class="skill-item">
-                <input type="checkbox" onchange="calculate()">
-                <span class="skill-name">Finnas Dolda Ting (INT)</span>
-                <span class="skill-base" data-attr="int">3</span>
-                <div class="skill-val">3</div>
-            </div>
-        
-            <div class="skill-item">
-                <input type="checkbox" onchange="calculate()">
-                <span class="skill-name">Genomskåda (PSY)</span>
-                <span class="skill-base" data-attr="psy">3</span>
-                <div class="skill-val">3</div>
-            </div>
-            <div class="skill-item">
-                <input type="checkbox" onchange="calculate()">
-                <span class="skill-name">Övertala (KAR)</span>
-                <span class="skill-base" data-attr="kar">3</span>
-                <div class="skill-val">3</div>
-            </div>
-        
-            <div class="skill-item">
-                <input type="checkbox" onchange="calculate()">
-                <span class="skill-name">Vildmarksvana (INT)</span>
-                <span class="skill-base" data-attr="int">3</span>
-                <div class="skill-val">3</div>
-            </div>    
         </div>
 
         <div class="save-banner">💾 Sparas lokalt. Tärningsslag delas online.</div>
