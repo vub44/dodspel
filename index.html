@@ -94,24 +94,35 @@
         }
 
         .dice-tray.minimized {
-            transform: translateY(calc(100% - 0px)); /* Lämnar precis tillräckligt med plats för fliken */
+            /* Vi flyttar ner den 100% av sin egen höjd, minus 2px kanten */
+            transform: translateY(calc(100% - 2px)); 
         }
 
+        /* 2. Uppdatera denna så fliken ser snygg ut mot linjen */
         .dice-toggle {
             background: var(--accent-color);
             color: white;
-            width: 60px;
-            height: 30px;
+            width: 50px; /* Gjorde den lite smalare */
+            height: 20px; /* Gjorde den lite lägre */
             position: absolute;
-            top: -30px;
+            top: -20px; /* Justerad höjd */
             right: 20px;
-            border-radius: 10px 10px 0 0;
+            border-radius: 8px 8px 0 0;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            font-size: 1rem;
-            box-shadow: 0 -3px 10px rgba(0,0,0,0.5);
+            font-size: 0.9rem; /* Gjorde pilen lite mindre */
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.4);
+            transition: 0.2s; /* Enkel transition för fliken också */
+        }
+
+        /* En liten bonus: Gör fliken lite tydligare när menyn är gömd */
+        .dice-tray.minimized .dice-toggle {
+            opacity: 0.7; /* Gör fliken lite mer subtil när menyn är stängd */
+        }
+        .dice-tray.minimized .dice-toggle:hover {
+            opacity: 1; /* Visa fliken helt när man hovrar över den */
         }
 
         .dice-log { font-size: 0.75rem; color: #888; margin-bottom: 5px; font-style: italic; height: 18px; }
