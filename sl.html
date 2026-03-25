@@ -120,6 +120,12 @@
 
     <div class="sl-grid">
         
+        <div class="sl-card" style="grid-column: 1 / -1;"> <h2>👥 Spelarstatus (Realtid)</h2>
+            <div id="player-status-container" style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <p style="color: #666; font-style: italic;">Väntar på att spelare ska uppdatera sina blad...</p>
+            </div>
+        </div>
+        
         <div class="sl-card">
             <h2>⚔️ Initiativordning</h2>
             <div id="init-container"></div>
@@ -212,6 +218,32 @@
                 const data = snapshot.val();
                 diceLog.innerText = `Logg: ${data.user} slog ${data.dice}`;
                 diceResult.innerText = `${data.user}: ${data.val}`;
+            });
+            const playersRef = ref(db, `rooms/${room}/sheets`);
+            onValue(playersRef, (snapshot) => {
+                const players = snapshot.val();
+                const container = document.getElementById('player-status-container');
+                container.innerHTML = ""; // Rensa och rita om
+            
+                if (!players) {
+                    container.innerHTML = "<p style='color: #666;'>Ingen data tillgänglig än.</p>";
+                    return;
+                }
+            
+                Object.keys(players).forEach(name => {
+                    const data = players[name];
+                    const playerCard = document.title = `
+                        <div class="monster-box" style="min-width: 150px; border-color: var(--accent-color); background: rgba(76, 163, 0, 0.05);">
+                            <strong style="color: var(--accent-color); display: block; border-bottom: 1px solid #333; margin-bottom: 5px;">${name}</strong>
+                            <div style="font-size: 0.9rem;">
+                                ❤️ KP: <span style="color: #ff4444; font-weight: bold;">${data.kp || '?'}</span><br>
+                                ✨ VP: <span style="color: #44aaff; font-weight: bold;">${data.vp || '?'}</span><br>
+                                <small style="color: #888;">${data.profession || 'Äventyrare'}</small>
+                            </div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', playerCard);
+                });
             });
     
             statusTxt.innerText = `🟢 Hanterar Rum: ${room}`;
