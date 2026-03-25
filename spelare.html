@@ -279,6 +279,21 @@
                 vDiv.innerText = cb.checked ? base * 2 : base;
             }
         });
+        
+        const room = document.getElementById('roomName').value.trim();
+        const charName = document.getElementById('charName').value.trim() || "Anonym";
+        
+        if (room && statusTxt.innerText.includes("🟢")) {
+            const sheetRef = ref(db, `rooms/${room}/sheets/${charName}`);
+            const sheetData = {
+                kp: document.getElementById('out-kp').innerText,
+                vp: document.getElementById('out-vp').innerText,
+                profession: document.getElementById('profession').value,
+                // Lägg till fler fält här efter hand!
+                lastUpdate: serverTimestamp()
+            };
+            set(sheetRef, sheetData);
+        }
     }
 
     fields.forEach(f => {
