@@ -219,6 +219,12 @@
         <div class="dice-toggle" onclick="toggleDice()">▲</div>
         <div id="dice-history" class="dice-log">Logg: Tom...</div>
         <div id="dice-result" class="dice-result-big">Klar att slå</div>
+    
+        <div style="margin-bottom: 10px; font-size: 0.8rem; color: #aaa; display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" id="secretRoll" style="accent-color: var(--accent-color); cursor: pointer;">
+            <label for="secretRoll" style="cursor: pointer;">Hemligt 🤫</label>
+        </div>
+    
         <div class="dice-buttons">
             <button class="dice-btn" onclick="rollDice(4)">T4</button>
             <button class="dice-btn" onclick="rollDice(6)">T6</button>
@@ -342,16 +348,32 @@
     
         // SL:s egna tärningsslag
         window.rollDice = function(sides) {
-            const room = roomInp.value.trim();
-            if (!statusTxt.innerText.includes("Hanterar")) return alert("Anslut till ett rum först!");
+            const room = document.getElementById('roomName').value.trim();
+            const isSecret = document.getElementById('secretRoll').checked;
             
+            // Generera resultatet
             const result = Math.floor(Math.random() * sides) + 1;
-            push(ref(db, `rooms/${room}/rolls`), {
-                user: "Spelledaren",
-                dice: `T${sides}`,
-                val: result,
-                timestamp: serverTimestamp()
-            });
+            const diceType = `T${sides}`;
+        
+            if (isSecret) {
+                // LOKALT SLAG: Uppdatera bara din skärm
+                diceLog.innerText = `Logg: (HEMLIGT) Du slog ${diceType}`;
+                diceResult.innerText = `Hemligt: ${result}`;
+                diceResult.style.color = "#ffcc00"; // Gul färg för att påminna om att det är dolt
+            } else {
+                // OFFENTLIGT SLAG: Skicka till Firebase
+                if (!document.getElementById('connectionStatus').innerText.includes("Hanterar")) {
+                    return alert("Anslut till ett rum först!");
+                }
+                
+                diceResult.style.color = "var(--accent-color)";
+                push(ref(db, `rooms/${room}/rolls`), {
+                    user: "Spelledaren",
+                    dice: diceType,
+                    val: result,
+                    timestamp: serverTimestamp()
+                });
+            }
         };
         window.toggleSection = function(contentId, arrowId) {
             const content = document.getElementById(contentId);
