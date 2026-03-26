@@ -48,6 +48,8 @@
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         .grid-6 { 
             display: grid; 
+            display: flex; flex-direction: column;
+            justify-content: center;
             /* Denna rad säger: Skapa så många kolumner som får plats, 
                men de får aldrig vara smalare än 100px styck */
             grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
