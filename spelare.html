@@ -100,23 +100,28 @@
             flex: 1; 
             min-width: 120px; 
             background: rgba(0,0,0,0.5); 
-            padding: 12px; 
+            padding: 10px; 
             border-radius: 6px; 
             text-align: center; 
             border: 1px solid #333; 
-            
-            /* HÄR ÄR FIXEN FÖR CENTRERING */
+            height: 90px; /* Samma höjd som grundegenskaperna för symmetri */
+        
+            /* NY LAYOUT: */
             display: flex; 
             flex-direction: column; 
-            justify-content: center; /* Centrerar vertikalt */
-            align-items: center;     /* Centrerar horisontellt */
         }        
+        .derived-box label {
+            font-size: 0.7rem;
+            color: #aaa;
+            text-transform: uppercase;
+            margin-bottom: auto; /* Detta trycker upp etiketten till toppen */
+        }
         .derived-val { 
-            font-size: 1.6rem; /* Gjorde siffran lite större för tydlighet */
+            font-size: 1.6rem; 
             font-weight: bold; 
             color: var(--accent-color); 
-            margin-top: 5px; 
-            line-height: 1; /* Tar bort extra luft runt siffran */
+            margin-bottom: auto; /* Detta, kombinerat med labelns margin, centrerar värdet i mitten */
+            line-height: 1;
         }
         label { font-size: 0.75rem; color: #aaa; text-transform: uppercase; }
 
