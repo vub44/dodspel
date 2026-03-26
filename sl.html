@@ -163,9 +163,16 @@
         </div>
 
         <div class="sl-card">
-            <h2>🐉 Fiender & NPC</h2>
-            <div id="monster-container"></div>
-            <button class="add-btn" onclick="addMonster()">+ Ny Fiende</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #444; padding-bottom: 8px; margin-bottom: 15px; cursor: pointer;" onclick="toggleAllNpcs()">
+                <h2 style="margin: 0; border-bottom: none; padding-bottom: 0;">🎭 NPC tracker</h2>
+                <span id="all-npcs-arrow" style="color: var(--accent-color); font-weight: bold; transition: 0.2s; transform: rotate(0deg);">▼</span>
+            </div>
+            
+            <div id="npc-tracker-content">
+                <div id="npc-container">
+                    </div>
+                <button class="add-btn" onclick="addNPC()">+ Ny NPC / Fiende</button>
+            </div>
         </div>
 
         <div class="sl-card">
@@ -294,6 +301,94 @@
                 val: result,
                 timestamp: serverTimestamp()
             });
+        };
+
+        // 1. Kollapsa HELA trackern
+        window.toggleAllNpcs = function() {
+            const content = document.getElementById('npc-tracker-content');
+            const arrow = document.getElementById('all-npcs-arrow');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                arrow.style.transform = 'rotate(0deg)';
+            } else {
+                content.style.display = 'none';
+                arrow.style.transform = 'rotate(-90deg)';
+            }
+        };
+        
+        // 2. Kollapsa EN enskild NPC
+        window.toggleSingleNpc = function(npcId) {
+            const details = document.getElementById(`${npcId}-details`);
+            const arrow = document.querySelector(`#${npcId} .npc-arrow`);
+            
+            if (details.style.display === 'none') {
+                details.style.display = 'block';
+                arrow.style.transform = 'rotate(0deg)';
+            } else {
+                details.style.display = 'none';
+                arrow.style.transform = 'rotate(-90deg)';
+            }
+        };
+        
+        // 3. Uppdatera namnet på namnraden live medan man skriver
+        window.updateNpcTitle = function(npcId, value) {
+            const titleSpan = document.getElementById(`${npcId}-title`);
+            titleSpan.innerText = value.trim() === "" ? "Ny NPC / Fiende" : value;
+        };
+        
+        // 4. Skapa en ny NPC
+        window.addNPC = function() {
+            const container = document.getElementById('npc-container');
+            const npcId = "npc-" + Date.now();
+        
+            const npcCard = `
+                <div class="monster-box" id="${npcId}" style="margin-bottom: 15px; border-left: 3px solid var(--accent-color); padding: 0; overflow: hidden; background: rgba(0,0,0,0.3);">
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.4); padding: 10px; cursor: pointer;" onclick="toggleSingleNpc('${npcId}')">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span class="npc-arrow" style="color: var(--accent-color); font-weight: bold; transition: 0.2s;">▼</span>
+                            <span id="${npcId}-title" style="font-weight: bold; font-size: 0.9rem; color: white;">Ny NPC / Fiende</span>
+                        </div>
+                        <button onclick="event.stopPropagation(); document.getElementById('${npcId}').remove()" style="background: none; border: none; color: #ff4444; cursor: pointer; font-weight: bold; padding: 5px;" title="Ta bort">✕</button>
+                    </div>
+        
+                    <div id="${npcId}-details" style="padding: 12px; display: block;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                            <div>
+                                <label style="font-size: 0.7rem; color: #aaa; text-transform: uppercase;">Namn / Typ</label>
+                                <input type="text" oninput="updateNpcTitle('${npcId}', this.value)" placeholder="Tex. Svartalf..." style="width: 100%; background: #111; border: 1px solid #333; color: white; padding: 6px; border-radius: 4px;">
+                            </div>
+                            <div>
+                                <label style="font-size: 0.7rem; color: #aaa; text-transform: uppercase;">Plats</label>
+                                <input type="text" placeholder="Tex. Skogen..." style="width: 100%; background: #111; border: 1px solid #333; color: white; padding: 6px; border-radius: 4px;">
+                            </div>
+                        </div>
+        
+                        <div class="hp-controls" style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+                            <span style="font-size: 0.85rem; color: #ff4444; font-weight: bold;">❤️ HP:</span>
+                            <button class="hp-btn" onclick="adjustNpcHp('${npcId}', -1)" style="width: 32px; height: 32px;">-</button>
+                            <input type="number" value="10" class="hp-val" style="width: 50px; text-align: center; font-weight: bold; background: #111; border: 1px solid #444; color: white; padding: 6px; border-radius: 4px;">
+                            <button class="hp-btn" onclick="adjustNpcHp('${npcId}', 1)" style="width: 32px; height: 32px;">+</button>
+                        </div>
+        
+                        <div>
+                            <label style="font-size: 0.7rem; color: #aaa; text-transform: uppercase;">Förmågor & Anteckningar</label>
+                            <textarea placeholder="Svärd (T8), Rädd för eld..." style="width: 100%; height: 70px; background: #111; border: 1px solid #333; color: white; padding: 8px; border-radius: 4px; resize: vertical; font-size: 0.85rem; font-family: inherit;"></textarea>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', npcCard);
+        };
+        
+        // 5. HP-räknaren
+        window.adjustNpcHp = function(npcId, amount) {
+            const card = document.getElementById(npcId);
+            if (!card) return;
+            const hpInput = card.querySelector('.hp-val');
+            let currentVal = parseInt(hpInput.value) || 0;
+            hpInput.value = currentVal + amount;
         };
     
         window.toggleDice = () => document.getElementById('diceTray').classList.toggle('minimized');
