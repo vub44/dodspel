@@ -124,6 +124,11 @@
         .dice-result-big { font-size: 1.6rem; font-weight: bold; color: var(--accent-color); margin-bottom: 12px; }
         .dice-buttons { display: flex; gap: 8px; width: 100%; max-width: 500px; }
         .dice-btn { background: #222; border: 1px solid var(--accent-color); color: white; padding: 12px; border-radius: 8px; cursor: pointer; flex: 1; font-weight: bold; }
+
+        #all-npcs-arrow, #condition-arrow, .npc-arrow {
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
     </style>
 </head>
 <body>
@@ -163,7 +168,7 @@
         </div>
 
         <div class="sl-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #444; padding-bottom: 8px; margin-bottom: 15px; cursor: pointer;" onclick="toggleAllNpcs()">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #444; padding-bottom: 8px; margin-bottom: 15px; cursor: pointer;" onclick="toggleSection('npc-tracker-content', 'all-npcs-arrow')">
                 <h2 style="margin: 0; border-bottom: none; padding-bottom: 0;">🎭 NPC tracker</h2>
                 <span id="all-npcs-arrow" style="color: var(--accent-color); font-weight: bold; transition: 0.2s; transform: rotate(0deg);">▼</span>
             </div>
