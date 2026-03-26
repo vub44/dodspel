@@ -59,27 +59,64 @@
 
         /* --- ACTION TRAY --- */
         .dice-tray {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: rgba(15, 15, 15, 0.98); border-top: 2px solid var(--accent-color);
-            padding: 15px; display: flex; flex-direction: column; align-items: center;
-            z-index: 2000; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0;
+            height: 320px; /* FAST HÖJD FÖR ATT SLIPPA HOPPIGHET */
+            background: rgba(15, 15, 15, 0.98); 
+            border-top: 2px solid var(--accent-color);
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            z-index: 2000; 
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
         }
         .dice-tray.minimized { transform: translateY(100%); }
 
         .tray-tabs {
-            position: absolute; top: -35px; left: 0; right: 0;
-            display: flex; justify-content: center; gap: 8px; pointer-events: none;
+            position: absolute; 
+            top: -34px; /* Justera denna om flikarna svävar (minska siffran för att sänka dem) */
+            left: 0; 
+            right: 0;
+            display: flex; 
+            justify-content: center; 
+            gap: 4px; 
+            pointer-events: none;
         }
         .tray-tab {
-            background: #111; color: #777; padding: 8px 20px; 
-            border: 1px solid var(--accent-color); border-bottom: none;
-            border-radius: 10px 10px 0 0; cursor: pointer; font-weight: bold; font-size: 0.7rem;
-            pointer-events: auto; transition: 0.2s;
+            background: #111; 
+            color: #777; 
+            padding: 8px 16px; 
+            border: 2px solid var(--accent-color); 
+            border-bottom: none; /* Viktigt för att de ska sitta ihop med rutan */
+            border-radius: 8px 8px 0 0; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 0.7rem;
+            pointer-events: auto; 
+            transition: 0.2s;
+            margin-bottom: -2px; /* Tvingar fliken att "överlappa" kanten för att dölja glapp */
         }
-        .tray-tab.active { background: var(--accent-color); color: white; transform: translateY(-2px); }
+        .tray-tab.active { 
+            background: var(--accent-color); 
+            color: white; 
+        }
 
-        .tab-content { display: none; width: 100%; max-width: 600px; }
-        .tab-content.active { display: flex; flex-direction: column; }
+        .tab-content { 
+            display: none; 
+            width: 100%; 
+            max-width: 600px; 
+            height: 100%; /* Fyller den fasta höjden */
+            overflow-y: auto; 
+        }
+        
+        .tab-content.active { 
+            display: flex; 
+            flex-direction: column; 
+        }
 
         .inv-nav { display: flex; gap: 5px; margin-bottom: 10px; }
         .inv-btn { flex: 1; padding: 10px; background: #222; border: 1px solid #444; color: #888; cursor: pointer; border-radius: 5px; }
@@ -115,7 +152,16 @@
             transform: scale(0.95);
         }
         
-        .log-container { width: 100%; height: 160px; overflow-y: scroll; background: #000; padding: 10px; border-radius: 5px; border: 1px solid #222; }
+        .log-container { 
+            width: 100%; 
+            flex-grow: 1; /* Låter loggen ta upp allt tillgängligt utrymme i den fasta rutan */
+            height: 200px; 
+            overflow-y: auto; 
+            background: #000; 
+            padding: 10px; 
+            border-radius: 5px; 
+            border: 1px solid #222;
+        }
         .log-entry { padding: 6px; border-bottom: 1px solid #111; display: flex; justify-content: space-between; font-size: 0.9rem; }
     </style>
 </head>
@@ -292,34 +338,32 @@
 
     window.rollDice = (sides) => {
         const res = Math.floor(Math.random() * sides) + 1;
-        const room = document.getElementById('roomName').value;
+        const roomInput = document.getElementById('roomName');
+        const room = roomInput ? roomInput.value : "Offline";
         const name = document.getElementById('charName').value || "Anonym";
-        const status = document.getElementById('connectionStatus').innerText;
-        
-        // Skapa ikoner för T20
+        const statusEl = document.getElementById('connectionStatus');
+        const isOnline = statusEl && statusEl.innerText.includes("🟢");
+    
         let icon = "";
         if (sides === 20) {
             if (res === 1) icon = " 🔥";
             if (res === 20) icon = " 💀";
         }
     
-        // Visa resultatet stort i rutan direkt (fungerar offline)
-        document.getElementById('dice-result').innerHTML = res + icon;
+        // Visa alltid resultatet direkt
+        const resultDisplay = document.getElementById('dice-result');
+        if (resultDisplay) resultDisplay.innerHTML = res + icon;
     
-        // Om vi är online: Skicka till Firebase
-        if (status.includes("🟢")) {
-            push(ref(db, `rooms/${room}/rolls`), { 
-                user: name, 
-                dice: "T" + sides, 
-                val: res,
-                ts: serverTimestamp() 
-            });
-        } else {
-            // Om offline: Lägg till i den lokala loggen ändå så man ser historik
-            const entry = document.createElement('div');
-            entry.className = 'log-entry';
-            entry.innerHTML = `<span>Lokalt slag (T${sides})</span><strong>${res}${icon}</strong>`;
-            document.getElementById('dice-history-list').prepend(entry);
+        // Logga lokalt
+        const logList = document.getElementById('dice-history-list');
+        const entry = document.createElement('div');
+        entry.className = 'log-entry';
+        entry.innerHTML = `<span>${isOnline ? name : 'Lokalt'} (T${sides})</span><strong>${res}${icon}</strong>`;
+        if (logList) logList.prepend(entry);
+    
+        // Skicka till Firebase om vi är online
+        if (isOnline) {
+            push(ref(db, `rooms/${room}/rolls`), { user: name, dice: "T"+sides, val: res });
         }
     };
 
