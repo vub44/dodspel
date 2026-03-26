@@ -354,48 +354,46 @@
         };
         
         // 4. Skapa en ny NPC
-        window.addNPC = function() {
+        window.addNPC = function(savedData = null) {
             const container = document.getElementById('npc-container');
-            const npcId = "npc-" + Date.now();
+            const npcId = savedData ? savedData.id : "npc-" + Date.now();
         
             const npcCard = `
-                <div class="monster-box" id="${npcId}" style="margin-bottom: 15px; border-left: 3px solid var(--accent-color); padding: 0; overflow: hidden; background: rgba(0,0,0,0.3);">
-                    
+                <div class="monster-box npc-card-item" id="${npcId}" data-id="${npcId}" style="margin-bottom: 15px; border-left: 3px solid var(--accent-color); padding: 0; overflow: hidden; background: rgba(0,0,0,0.3);">
                     <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.4); padding: 10px; cursor: pointer;" onclick="toggleSingleNpc('${npcId}')">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <span class="npc-arrow" style="color: var(--accent-color); font-weight: bold; transition: 0.2s;">▼</span>
-                            <span id="${npcId}-title" style="font-weight: bold; font-size: 0.9rem; color: white;">Ny NPC / Fiende</span>
+                            <span id="${npcId}-title" style="font-weight: bold; font-size: 0.9rem; color: white;">${savedData ? savedData.name : "Ny NPC / Fiende"}</span>
                         </div>
-                        <button onclick="event.stopPropagation(); document.getElementById('${npcId}').remove()" style="background: none; border: none; color: #ff4444; cursor: pointer; font-weight: bold; padding: 5px;" title="Ta bort">✕</button>
+                        <button onclick="event.stopPropagation(); removeNPC('${npcId}')" style="background: none; border: none; color: #ff4444; cursor: pointer; font-weight: bold; padding: 5px;">✕</button>
                     </div>
         
-                    <div id="${npcId}-details" style="padding: 12px; display: block;">
+                    <div id="${npcId}-details" style="padding: 12px; display: ${savedData ? 'none' : 'block'};">
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
                             <div>
-                                <label style="font-size: 0.7rem; color: #aaa; text-transform: uppercase;">Namn / Typ</label>
-                                <input type="text" oninput="updateNpcTitle('${npcId}', this.value)" placeholder="Tex. Svartalf..." style="width: 100%; background: #111; border: 1px solid #333; color: white; padding: 6px; border-radius: 4px;">
+                                <label style="font-size: 0.7rem;">Namn / Typ</label>
+                                <input type="text" class="npc-name" oninput="updateNpcTitle('${npcId}', this.value); saveNPCs();" value="${savedData ? savedData.name : ''}" placeholder="Namn..." style="width: 100%; background: #111; border: 1px solid #333; color: white; padding: 6px;">
                             </div>
                             <div>
-                                <label style="font-size: 0.7rem; color: #aaa; text-transform: uppercase;">Plats</label>
-                                <input type="text" placeholder="Tex. Skogen..." style="width: 100%; background: #111; border: 1px solid #333; color: white; padding: 6px; border-radius: 4px;">
+                                <label style="font-size: 0.7rem;">Plats</label>
+                                <input type="text" class="npc-location" oninput="saveNPCs()" value="${savedData ? savedData.location : ''}" placeholder="Plats..." style="width: 100%; background: #111; border: 1px solid #333; color: white; padding: 6px;">
                             </div>
                         </div>
-        
                         <div class="hp-controls" style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
-                            <span style="font-size: 0.85rem; color: #ff4444; font-weight: bold;">❤️ HP:</span>
-                            <button class="hp-btn" onclick="adjustNpcHp('${npcId}', -1)" style="width: 32px; height: 32px;">-</button>
-                            <input type="number" value="10" class="hp-val" style="width: 50px; text-align: center; font-weight: bold; background: #111; border: 1px solid #444; color: white; padding: 6px; border-radius: 4px;">
-                            <button class="hp-btn" onclick="adjustNpcHp('${npcId}', 1)" style="width: 32px; height: 32px;">+</button>
+                            <span style="font-size: 0.85rem; color: #ff4444;">❤️ HP:</span>
+                            <button class="hp-btn" onclick="adjustNpcHp('${npcId}', -1); saveNPCs();">-</button>
+                            <input type="number" class="hp-val" oninput="saveNPCs()" value="${savedData ? savedData.hp : 10}" style="width: 50px; background: #111; border: 1px solid #444; color: white; text-align: center;">
+                            <button class="hp-btn" onclick="adjustNpcHp('${npcId}', 1); saveNPCs();">+</button>
                         </div>
-        
                         <div>
-                            <label style="font-size: 0.7rem; color: #aaa; text-transform: uppercase;">Förmågor & Anteckningar</label>
-                            <textarea placeholder="Svärd (T8), Rädd för eld..." style="width: 100%; height: 70px; background: #111; border: 1px solid #333; color: white; padding: 8px; border-radius: 4px; resize: vertical; font-size: 0.85rem; font-family: inherit;"></textarea>
+                            <label style="font-size: 0.7rem;">Noteringar</label>
+                            <textarea class="npc-notes" oninput="saveNPCs()" placeholder="Förmågor..." style="width: 100%; height: 70px; background: #111; border: 1px solid #333; color: white; font-family: inherit;">${savedData ? savedData.notes : ''}</textarea>
                         </div>
                     </div>
                 </div>
             `;
             container.insertAdjacentHTML('beforeend', npcCard);
+            if(!savedData) saveNPCs(); // Spara att en ny tom ruta skapats
         };
         
         // 5. HP-räknaren
@@ -408,6 +406,43 @@
         };
     
         window.toggleDice = () => document.getElementById('diceTray').classList.toggle('minimized');
+        // Funktion för att radera och sen spara om listan
+        window.removeNPC = function(npcId) {
+            document.getElementById(npcId).remove();
+            saveNPCs();
+        };
+        
+        // Samla ihop all data från alla NPC-rutor och lägg i localStorage
+        window.saveNPCs = function() {
+            const npcCards = document.querySelectorAll('.npc-card-item');
+            const npcData = [];
+            
+            npcCards.forEach(card => {
+                npcData.push({
+                    id: card.dataset.id,
+                    name: card.querySelector('.npc-name').value,
+                    location: card.querySelector('.npc-location').value,
+                    hp: card.querySelector('.hp-val').value,
+                    notes: card.querySelector('.npc-notes').value
+                });
+            });
+            
+            localStorage.setItem('sl_npcs', JSON.stringify(npcData));
+        };
+        
+        // Ladda in sparade NPC:er när sidan startar
+        window.loadNPCs = function() {
+            const rawData = localStorage.getItem('sl_npcs');
+            if (rawData) {
+                const npcData = JSON.parse(rawData);
+                npcData.forEach(npc => addNPC(npc));
+            }
+        };
+        
+        // KÖR DETTA NÄR SIDAN LADDAS
+        window.addEventListener('DOMContentLoaded', () => {
+            loadNPCs();
+        });
     </script>
 </body>
 </html>
