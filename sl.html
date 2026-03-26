@@ -276,35 +276,52 @@
             onValue(playersRef, (snapshot) => {
                 const players = snapshot.val();
                 const container = document.getElementById('player-status-container');
-                container.innerHTML = ""; // Rensa och rita om
+                container.innerHTML = ""; 
             
                 if (!players) {
-                    container.innerHTML = "<p style='color: #666;'>Ingen data tillgänglig än.</p>";
+                    container.innerHTML = "<p style='color: #666;'>Väntar på att spelare ska ansluta...</p>";
                     return;
                 }
             
                 Object.keys(players).forEach(name => {
                     const data = players[name];
-                    const currentKP = data['cur-kp'] || data.kp || data.hp || '?';
-                    const maxKP = data['max-kp'] || data.maxhp || '';
                     
-                    const currentVP = data['cur-vp'] || data.vp || '?';
-                    const maxVP = data['max-vp'] || '';
+                    // Här matchar vi namnen exakt mot din syncSheetToFirebase-funktion
+                    const curKP = data.currentKp || '0';
+                    const maxKP = data.maxKp || '0';
+                    const curVP = data.currentVp || '0';
+                    const maxVP = data.maxVp || '0';
+                    
+                    const gold = data.gold || '0';
+                    const silver = data.silver || '0';
+                    const copper = data.copper || '0';
+            
                     const playerCard = `
-                        <div class="monster-box" style="min-width: 150px; border-color: var(--accent-color); background: rgba(76, 163, 0, 0.05);">
-                            <strong style="color: var(--accent-color); display: block; border-bottom: 1px solid #333; margin-bottom: 5px;">${name}</strong>
-                            <div style="font-size: 0.9rem;">
-                                ❤️ KP: <span style="color: #ff4444; font-weight: bold;">${currentKP}</span> 
-                                <small style="color:#666">${maxKP ? '/ ' + maxKP : ''}</small><br>
+                        <div class="monster-box" style="min-width: 180px; border-color: var(--accent-color); background: rgba(76, 163, 0, 0.05); padding: 10px;">
+                            <strong style="color: var(--accent-color); display: block; border-bottom: 1px solid #333; margin-bottom: 8px; font-size: 1rem;">${name}</strong>
+                            
+                            <div style="font-size: 0.85rem; line-height: 1.6;">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>❤️ KP:</span>
+                                    <span style="color: #ff4444; font-weight: bold;">${curKP} <small style="color:#666">/ ${maxKP}</small></span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>✨ VP:</span>
+                                    <span style="color: #44aaff; font-weight: bold;">${curVP} <small style="color:#666">/ ${maxVP}</small></span>
+                                </div>
                                 
-                                ✨ VP: <span style="color: #44aaff; font-weight: bold;">${currentVP}</span>
-                                <small style="color:#666">${maxVP ? '/ ' + maxVP : ''}</small><br>
-                                
-                                <small style="color: #888;">${data.profession || 'Äventyrare'}</small>
+                                <div style="margin-top: 8px; padding-top: 5px; border-top: 1px dashed #444; display: flex; justify-content: center; gap: 8px; font-size: 0.75rem;">
+                                    <span title="Guld" style="color: #ffd700;">${gold}G</span>
+                                    <span title="Silver" style="color: #c0c0c0;">${silver}S</span>
+                                    <span title="Koppar" style="color: #cd7f32;">${copper}K</span>
+                                </div>
+            
+                                <div style="margin-top: 5px; text-align: center;">
+                                    <small style="color: #888; font-style: italic;">${data.profession || 'Äventyrare'}</small>
+                                </div>
                             </div>
                         </div>
                     `;
-                    // OCH SEN skicka in den i containern:
                     container.insertAdjacentHTML('beforeend', playerCard);
                 });
             });
