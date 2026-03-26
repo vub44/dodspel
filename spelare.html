@@ -221,6 +221,9 @@
 
     <div class="room-dropdown" id="roomMenu">
         <div class="room-header" onclick="document.getElementById('roomMenu').classList.toggle('open')">
+            <div onclick="window.location.reload();" style="cursor: pointer; padding: 5px 10px; background: rgba(255,255,255,0.1); border-radius: 5px; font-size: 1.2rem;" title="Ladda om / Hem">
+                🏠
+            </div>
             <span id="connectionStatus">🔴 Ej ansluten</span>
             <span>▼</span>
         </div>
@@ -230,9 +233,6 @@
             <button onclick="connectToRoom()" style="background: var(--accent-color); color: white; border: none; padding: 10px; cursor: pointer; border-radius: 20px; margin-top: 10px; font-weight: bold;">ANSLUT TILL RUM</button>
             <div id="userList" style="margin-top: 10px; font-size: 0.8rem;"></div>
         </div>
-    </div>
-    <div onclick="window.location.reload();" style="cursor: pointer; padding: 5px 10px; background: rgba(255,255,255,0.1); border-radius: 5px; font-size: 1.2rem;" title="Ladda om / Hem">
-        🏠
     </div>
     <div style="text-align: center; padding: 80px 20px 10px 20px;">
         <h1 style="margin: 0; font-size: 2.5rem; text-shadow: 2px 2px 10px rgba(0,0,0,1);">⚔️ Drakar och Demoner</h1>
