@@ -48,20 +48,53 @@
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         .grid-6 { 
             display: grid; 
-            justify-content: center;
-            /* Denna rad säger: Skapa så många kolumner som får plats, 
-               men de får aldrig vara smalare än 100px styck */
+            /* Skapar så många 100px-kolumner som får plats, men centrerar dem */
             grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
-            gap: 10px; 
+            gap: 10px;
+            justify-items: center; /* Centrerar boxarna i sina grid-celler */
         }
 
         input[type="text"], input[type="number"], textarea { 
             background: #1a1a1a; border: 1px solid #333; color: white; padding: 10px; border-radius: 4px; width: 100%; 
         }
 
-        .stat-box { background: #0a0a0a; padding: 10px; border-radius: 6px; text-align: center; border: 1px solid #222; }
-        .stat-box input { border: none; border-bottom: 2px solid var(--accent-color); font-size: 1.4rem; font-weight: bold; width: 60px; background: transparent; text-align: center; }
-
+        .stat-box { 
+            background: #0a0a0a; 
+            padding: 10px 5px; 
+            border-radius: 6px; 
+            text-align: center; 
+            border: 1px solid #222;
+            
+            /* FIXEN FÖR ATT STAPLA VERTIKALT */
+            display: flex;
+            flex-direction: column; /* Tvingar innehållet att staplas */
+            align-items: center;    /* Centrerar horisontellt */
+            justify-content: center;/* Centrerar vertikalt */
+            min-width: 80px;        /* Hindrar dem från att bli för smala */
+            height: 90px;           /* Ger alla exakt samma höjd */
+        }
+        
+        .stat-box label {
+            display: block;
+            font-size: 0.7rem;
+            color: #aaa;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        
+        .stat-box input { 
+            border: none; 
+            border-bottom: 2px solid var(--accent-color); 
+            font-size: 1.4rem; 
+            font-weight: bold; 
+            width: 50px;           /* Fast bredd på siffran så den inte töjer boxen */
+            background: transparent; 
+            color: white;
+            text-align: center;
+            outline: none;
+            padding: 0;
+            margin: 0;
+        }
         .derived-stats { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
         .derived-box { flex: 1; min-width: 120px; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 6px; text-align: center; border: 1px solid #333; display: flex; flex-direction: column; justify-content: space-between; }
         .derived-val { font-size: 1.4rem; font-weight: bold; color: var(--accent-color); margin-top: 5px; }
@@ -197,6 +230,9 @@
             <button onclick="connectToRoom()" style="background: var(--accent-color); color: white; border: none; padding: 10px; cursor: pointer; border-radius: 20px; margin-top: 10px; font-weight: bold;">ANSLUT TILL RUM</button>
             <div id="userList" style="margin-top: 10px; font-size: 0.8rem;"></div>
         </div>
+    </div>
+    <div onclick="window.location.reload();" style="cursor: pointer; padding: 5px 10px; background: rgba(255,255,255,0.1); border-radius: 5px; font-size: 1.2rem;" title="Ladda om / Hem">
+        🏠
     </div>
     <div style="text-align: center; padding: 80px 20px 10px 20px;">
         <h1 style="margin: 0; font-size: 2.5rem; text-shadow: 2px 2px 10px rgba(0,0,0,1);">⚔️ Drakar och Demoner</h1>
