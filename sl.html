@@ -176,16 +176,22 @@
         </div>
 
         <div class="sl-card">
-            <h2>⚠️ Tillstånd (Nackdel)</h2>
-            <div class="condition-grid">
-                <div class="cond-item"><span class="cond-name">UTMATTAD</span>STY: Fysiska handlingar</div>
-                <div class="cond-item"><span class="cond-name">SJUK</span>FYS: Motstå gift/sjukdom</div>
-                <div class="cond-item"><span class="cond-name">UTSATT</span>SMI: Undvika/Smyga</div>
-                <div class="cond-item"><span class="cond-name">VILSEN</span>INT: Kunskap/Speja</div>
-                <div class="cond-item"><span class="cond-name">ARG</span>PSY: Magiprov/Viljestyrka</div>
-                <div class="cond-item"><span class="cond-name">RÄDD</span>KAR: Påverka andra</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleSection('condition-content', 'condition-arrow')">
+                <h2 style="margin: 0; border-bottom: none; padding-bottom: 0;">⚠️ Tillstånd (Nackdel)</h2>
+                <span id="condition-arrow" style="color: var(--condition-color); font-weight: bold; transition: 0.2s;">▼</span>
             </div>
-            <p style="font-size: 0.75rem; color: #777; margin-top: 15px;">* Att vila återhämtar ett tillstånd. Läkekonst kan hjälpa.</p>
+        
+            <div id="condition-content" style="margin-top: 15px;">
+                <div class="condition-grid">
+                    <div class="cond-item"><span class="cond-name">UTMATTAD</span>STY: Fysiska handlingar</div>
+                    <div class="cond-item"><span class="cond-name">SJUK</span>FYS: Motstå gift/sjukdom</div>
+                    <div class="cond-item"><span class="cond-name">UTSATT</span>SMI: Undvika/Smyga</div>
+                    <div class="cond-item"><span class="cond-name">VILSEN</span>INT: Kunskap/Speja</div>
+                    <div class="cond-item"><span class="cond-name">ARG</span>PSY: Magiprov/Viljestyrka</div>
+                    <div class="cond-item"><span class="cond-name">RÄDD</span>KAR: Påverka andra</div>
+                </div>
+                <p style="font-size: 0.75rem; color: #777; margin-top: 15px;">* Att vila återhämtar ett tillstånd. Läkekonst kan hjälpa.</p>
+            </div>
         </div>
 
     </div>
@@ -302,18 +308,16 @@
                 timestamp: serverTimestamp()
             });
         };
-
-        // 1. Kollapsa HELA trackern
-        window.toggleAllNpcs = function() {
-            const content = document.getElementById('npc-tracker-content');
-            const arrow = document.getElementById('all-npcs-arrow');
+        window.toggleSection = function(contentId, arrowId) {
+            const content = document.getElementById(contentId);
+            const arrow = document.getElementById(arrowId);
             
             if (content.style.display === 'none') {
                 content.style.display = 'block';
-                arrow.style.transform = 'rotate(0deg)';
+                if(arrow) arrow.style.transform = 'rotate(0deg)';
             } else {
                 content.style.display = 'none';
-                arrow.style.transform = 'rotate(-90deg)';
+                if(arrow) arrow.style.transform = 'rotate(-90deg)';
             }
         };
         
