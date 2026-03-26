@@ -282,10 +282,19 @@
 
         <div class="section">
             <h3>Ekonomi & Pengar</h3>
-            <div class="grid-3">
-                <div class="stat-box"><label>Guld</label><br><input type="number" id="money-gold" class="save-field" value="0"></div>
-                <div class="stat-box"><label>Silver</label><br><input type="number" id="money-silver" class="save-field" value="0"></div>
-                <div class="stat-box"><label>Koppar</label><br><input type="number" id="money-copper" class="save-field" value="0"></div>
+            <div class="grid-3" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px;">
+                <div class="stat-box">
+                    <label>Guld</label>
+                    <input type="number" id="money-gold" class="save-field" value="0">
+                </div>
+                <div class="stat-box">
+                    <label>Silver</label>
+                    <input type="number" id="money-silver" class="save-field" value="0">
+                </div>
+                <div class="stat-box">
+                    <label>Koppar</label>
+                    <input type="number" id="money-copper" class="save-field" value="0">
+                </div>
             </div>
         </div>
 
@@ -393,11 +402,10 @@
 
     window.rollDice = (sides) => {
         const res = Math.floor(Math.random() * sides) + 1;
-        const roomInput = document.getElementById('roomName');
-        const room = roomInput ? roomInput.value : "Offline";
+        const room = document.getElementById('roomName').value;
         const name = document.getElementById('charName').value || "Anonym";
-        const statusEl = document.getElementById('connectionStatus');
-        const isOnline = statusEl && statusEl.innerText.includes("🟢");
+        const status = document.getElementById('connectionStatus').innerText;
+        const isOnline = status.includes("🟢");
     
         let icon = "";
         if (sides === 20) {
@@ -405,29 +413,47 @@
             if (res === 20) icon = " 💀";
         }
     
-        // Visa alltid resultatet direkt
-        const resultDisplay = document.getElementById('dice-result');
-        if (resultDisplay) resultDisplay.innerHTML = res + icon;
+        // Visa alltid resultatet stort direkt
+        document.getElementById('dice-result').innerHTML = res + icon;
     
-        // Logga lokalt
-        const logList = document.getElementById('dice-history-list');
-        const entry = document.createElement('div');
-        entry.className = 'log-entry';
-        entry.innerHTML = `<span>${isOnline ? name : 'Lokalt'} (T${sides})</span><strong>${res}${icon}</strong>`;
-        if (logList) logList.prepend(entry);
-    
-        // Skicka till Firebase om vi är online
         if (isOnline) {
-            push(ref(db, `rooms/${room}/rolls`), { user: name, dice: "T"+sides, val: res });
+            // Skicka till Firebase - onChildAdded kommer sköta visningen i loggen
+            push(ref(db, `rooms/${room}/rolls`), { 
+                user: name, 
+                dice: "T" + sides, 
+                val: res,
+                ts: serverTimestamp() 
+            });
+        } else {
+            // Om offline: Logga lokalt manuellt eftersom ingen Firebase-lyssnare körs
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `<span>LOKALT (T${sides})</span><strong>${res}${icon}</strong>`;
+            document.getElementById('dice-history-list').prepend(entry);
         }
     };
 
     window.connectToRoom = () => {
         const room = document.getElementById('roomName').value;
+        const name = document.getElementById('charName').value || "Anonym";
+        
+        if(!room) return alert("Ange ett rumsnamn!");
+    
+        // Skriv in dig själv i rumslistan så andra ser dig
+        const userRef = ref(db, `rooms/${room}/users/${name}`);
+        set(userRef, true);
+        onDisconnect(userRef).remove(); // Ta bort mig när jag stänger fliken
+    
+        // Lyssna på användare
         onValue(ref(db, `rooms/${room}/users`), s => {
-            const u = s.val() ? Object.keys(s.val()) : [];
-            document.getElementById('userList').innerHTML = "👥 " + u.join(', ');
+            const users = s.val() ? Object.keys(s.val()) : [];
+            document.getElementById('userList').innerHTML = "👥 " + users.join(', ');
         });
+    
+        // Rensa gamla loggen innan vi börjar lyssna på nya rummet
+        document.getElementById('dice-history-list').innerHTML = "";
+    
+        // Lyssna på slag (Här sker den enda loggningen online)
         onChildAdded(query(ref(db, `rooms/${room}/rolls`), limitToLast(20)), s => {
             const d = s.val();
             let icon = d.dice === "T20" ? (d.val === 1 ? " 🔥" : (d.val === 20 ? " 💀" : "")) : "";
@@ -435,11 +461,10 @@
             entry.className = 'log-entry';
             entry.innerHTML = `<span>${d.user}</span><strong>${d.val}${icon}</strong>`;
             document.getElementById('dice-history-list').prepend(entry);
-            document.getElementById('dice-result').innerHTML = d.val + icon;
         });
+    
         document.getElementById('connectionStatus').innerText = "🟢 " + room;
         document.getElementById('roomMenu').classList.remove('open');
-        window.syncSheetToFirebase();
     };
 
     function calc() {
