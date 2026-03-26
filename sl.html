@@ -160,11 +160,18 @@
         </div>
         
         <div class="sl-card">
-            <h2>⚔️ Initiativordning</h2>
-            <div id="init-container"></div>
-            <button class="add-btn" onclick="addInitRow()">+ Deltagare</button>
-            <button class="add-btn" style="background:#2b5797; margin-top:5px;" onclick="rollAllInitiative()">🎲 Slumpa alla (T10)</button>
-            <button class="add-btn" style="background:#444;" onclick="sortInitiative()">Sortera (Lägst först)</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; border-bottom: 1px solid #444; padding-bottom: 8px; margin-bottom: 15px;" 
+                 onclick="toggleSection('init-content', 'init-arrow')">
+                <h2 style="margin: 0; border-bottom: none; padding-bottom: 0;">⚔️ Initiativordning</h2>
+                <span id="init-arrow" style="display: none; font-weight: bold; transition: 0.2s;">▼</span>
+            </div>
+        
+            <div id="init-content">
+                <div id="init-container"></div>
+                <button class="add-btn" onclick="addInitRow()">+ Deltagare</button>
+                <button class="add-btn" style="background:#2b5797; margin-top:5px;" onclick="rollAllInitiative()">🎲 Slumpa alla (T10)</button>
+                <button class="add-btn" style="background:#444;" onclick="sortInitiative()">Sortera (Lägst först)</button>
+            </div>
         </div>
 
         <div class="sl-card">
