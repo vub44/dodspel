@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DoD Karaktärsblad v12.0</title>
+    <title>DoD Karaktärsblad v13.0</title>
     <style>
         :root {
             --bg-color: #121212;
@@ -18,7 +18,7 @@
             color: var(--text-color);
             margin: 0; padding: 0;
             background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('dragonbane_banner.jpg');
-            background-size: cover; background-attachment: fixed;
+            background-size: cover; background-position: center; background-attachment: fixed;
             background-color: var(--bg-color);
         }
 
@@ -47,11 +47,12 @@
         }
 
         .stat-box { background: #0a0a0a; padding: 10px; border-radius: 6px; text-align: center; border: 1px solid #222; }
-        .stat-box input { border: none; border-bottom: 2px solid var(--accent-color); font-size: 1.4rem; font-weight: bold; width: 50px; background: transparent; text-align: center; }
+        .stat-box input { border: none; border-bottom: 2px solid var(--accent-color); font-size: 1.4rem; font-weight: bold; width: 60px; background: transparent; text-align: center; }
 
         .derived-stats { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
-        .derived-box { flex: 1; min-width: 100px; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 6px; text-align: center; border: 1px solid #333; }
-        .derived-val { font-size: 1.4rem; font-weight: bold; color: var(--accent-color); }
+        .derived-box { flex: 1; min-width: 120px; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 6px; text-align: center; border: 1px solid #333; display: flex; flex-direction: column; justify-content: space-between; }
+        .derived-val { font-size: 1.4rem; font-weight: bold; color: var(--accent-color); margin-top: 5px; }
+        label { font-size: 0.75rem; color: #aaa; text-transform: uppercase; }
 
         .skill-item { display: grid; grid-template-columns: 2fr 45px 45px 45px; align-items: center; background: rgba(255,255,255,0.03); padding: 6px 10px; border-radius: 4px; margin-bottom: 4px; font-size: 0.85rem; }
         .skill-val { font-weight: bold; color: var(--accent-color); text-align: center; }
@@ -80,7 +81,6 @@
         .tab-content { display: none; width: 100%; max-width: 600px; }
         .tab-content.active { display: flex; flex-direction: column; }
 
-        /* --- INVENTORY & LOG --- */
         .inv-nav { display: flex; gap: 5px; margin-bottom: 10px; }
         .inv-btn { flex: 1; padding: 10px; background: #222; border: 1px solid #444; color: #888; cursor: pointer; border-radius: 5px; }
         .inv-btn.active { color: var(--accent-color); border-color: var(--accent-color); background: #1a1a1a; }
@@ -88,15 +88,7 @@
         .dice-result-big { font-size: 2.2rem; font-weight: bold; color: var(--accent-color); text-align: center; margin-bottom: 15px; min-height: 50px; }
         .dice-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; }
         
-        .log-container { 
-            width: 100%; 
-            height: 160px; /* FAST HÖJD SOM ÖNSKAT */
-            overflow-y: scroll; 
-            background: #000; 
-            padding: 10px; 
-            border-radius: 5px; 
-            border: 1px solid #222;
-        }
+        .log-container { width: 100%; height: 160px; overflow-y: scroll; background: #000; padding: 10px; border-radius: 5px; border: 1px solid #222; }
         .log-entry { padding: 6px; border-bottom: 1px solid #111; display: flex; justify-content: space-between; font-size: 0.9rem; }
     </style>
 </head>
@@ -131,10 +123,37 @@
                 <div class="stat-box"><label>PSY</label><input type="number" id="psy" class="save-field attr" value="10"></div>
                 <div class="stat-box"><label>KAR</label><input type="number" id="kar" class="save-field attr" value="10"></div>
             </div>
+
             <div class="derived-stats">
-                <div class="derived-box"><label>❤️ KP</label><div id="out-kp" class="derived-val">10</div></div>
-                <div class="derived-box"><label>✨ VP</label><div id="out-vp" class="derived-val">10</div></div>
-                <div class="derived-box"><label>🎒 Bärförmåga</label><div id="out-carry" class="derived-val">5</div></div>
+                <div class="derived-box">
+                    <label>Nuvarande KP</label>
+                    <div class="stat-box" style="margin-top:5px; background:transparent; border:none;"><input type="number" id="cur-kp" class="save-field" value="10" style="border-bottom: 2px solid #ff4444;"></div>
+                </div>
+                <div class="derived-box">
+                    <label>Max KP (FYS)</label>
+                    <div id="out-kp" class="derived-val">10</div>
+                </div>
+                <div class="derived-box">
+                    <label>Nuvarande VP</label>
+                    <div class="stat-box" style="margin-top:5px; background:transparent; border:none;"><input type="number" id="cur-vp" class="save-field" value="10" style="border-bottom: 2px solid #44aaff;"></div>
+                </div>
+                <div class="derived-box">
+                    <label>Max VP (PSY)</label>
+                    <div id="out-vp" class="derived-val">10</div>
+                </div>
+                <div class="derived-box">
+                    <label>🎒 Bärförmåga</label>
+                    <div id="out-carry" class="derived-val">5</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Ekonomi & Pengar</h3>
+            <div class="grid-3">
+                <div class="stat-box"><label>Guld</label><br><input type="number" id="money-gold" class="save-field" value="0"></div>
+                <div class="stat-box"><label>Silver</label><br><input type="number" id="money-silver" class="save-field" value="0"></div>
+                <div class="stat-box"><label>Koppar</label><br><input type="number" id="money-copper" class="save-field" value="0"></div>
             </div>
         </div>
 
@@ -177,8 +196,8 @@
                 <button class="inv-btn active" id="btn-sub-weapons" onclick="showInvPanel('weapons')">Vapen</button>
                 <button class="inv-btn" id="btn-sub-items" onclick="showInvPanel('items')">Prylar</button>
             </div>
-            <div id="panel-weapons" style="display:block;"><textarea id="inv-weapons" class="save-field" placeholder="Namn - Skada - Egenskap..." style="height:120px"></textarea></div>
-            <div id="panel-items" style="display:none;"><textarea id="inv-items" class="save-field" placeholder="Utrustning, facklor, guld..." style="height:120px"></textarea></div>
+            <div id="panel-weapons" style="display:block;"><textarea id="inv-weapons" class="save-field" placeholder="Vapen, skada & egenskaper..." style="height:120px"></textarea></div>
+            <div id="panel-items" style="display:none;"><textarea id="inv-items" class="save-field" placeholder="Utrustning, rep, facklor..." style="height:120px"></textarea></div>
         </div>
     </div>
 
@@ -259,19 +278,29 @@
             const entry = document.createElement('div');
             entry.className = 'log-entry';
             entry.innerHTML = `<span>${d.user}</span><strong>${d.val}${icon}</strong>`;
-            const log = document.getElementById('dice-history-list');
-            log.prepend(entry);
+            document.getElementById('dice-history-list').prepend(entry);
             document.getElementById('dice-result').innerHTML = d.val + icon;
         });
         document.getElementById('connectionStatus').innerText = "🟢 " + room;
         document.getElementById('roomMenu').classList.remove('open');
+        window.syncSheetToFirebase();
     };
 
     function calc() {
-        const v = (id) => parseInt(document.getElementById(id).value) || 0;
+        const v = (id) => {
+            const el = document.getElementById(id);
+            return el ? parseInt(el.value) || 0 : 0;
+        };
+        const vt = (id) => {
+            const el = document.getElementById(id);
+            return el ? el.innerText : "0";
+        };
+
+        // Autoberäknar Max-fälten
         document.getElementById('out-kp').innerText = v('fys');
         document.getElementById('out-vp').innerText = v('psy');
         document.getElementById('out-carry').innerText = Math.ceil(v('sty') / 2);
+        
         document.querySelectorAll('.skill-item').forEach(row => {
             const baseEl = row.querySelector('.skill-base');
             const valEl = row.querySelector('.skill-val');
@@ -281,7 +310,29 @@
             baseEl.innerText = base;
             valEl.innerText = cb.checked ? base * 2 : base;
         });
+
+        window.syncSheetToFirebase();
     }
+
+    window.syncSheetToFirebase = function() {
+        const room = document.getElementById('roomName').value;
+        const charName = document.getElementById('charName').value || "Anonym";
+        const status = document.getElementById('connectionStatus').innerText;
+
+        if (room && status.includes("🟢")) {
+            set(ref(db, `rooms/${room}/sheets/${charName}`), {
+                currentKp: document.getElementById('cur-kp').value,
+                maxKp: document.getElementById('out-kp').innerText,
+                currentVp: document.getElementById('cur-vp').value,
+                maxVp: document.getElementById('out-vp').innerText,
+                profession: document.getElementById('profession').value,
+                gold: document.getElementById('money-gold').value,
+                silver: document.getElementById('money-silver').value,
+                copper: document.getElementById('money-copper').value,
+                lastUpdate: serverTimestamp()
+            });
+        }
+    };
 
     document.querySelectorAll('.save-field, .attr').forEach(f => {
         const saved = localStorage.getItem(f.id);
