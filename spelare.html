@@ -96,8 +96,28 @@
             margin: 0;
         }
         .derived-stats { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
-        .derived-box { flex: 1; min-width: 120px; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 6px; text-align: center; border: 1px solid #333; display: flex; flex-direction: column; justify-content: space-between; }
-        .derived-val { font-size: 1.4rem; font-weight: bold; color: var(--accent-color); margin-top: 5px; }
+        .derived-box { 
+            flex: 1; 
+            min-width: 120px; 
+            background: rgba(0,0,0,0.5); 
+            padding: 12px; 
+            border-radius: 6px; 
+            text-align: center; 
+            border: 1px solid #333; 
+            
+            /* HÄR ÄR FIXEN FÖR CENTRERING */
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; /* Centrerar vertikalt */
+            align-items: center;     /* Centrerar horisontellt */
+        }        
+        .derived-val { 
+            font-size: 1.6rem; /* Gjorde siffran lite större för tydlighet */
+            font-weight: bold; 
+            color: var(--accent-color); 
+            margin-top: 5px; 
+            line-height: 1; /* Tar bort extra luft runt siffran */
+        }
         label { font-size: 0.75rem; color: #aaa; text-transform: uppercase; }
 
         .skill-item { display: grid; grid-template-columns: 2fr 45px 45px 45px; align-items: center; background: rgba(255,255,255,0.03); padding: 6px 10px; border-radius: 4px; margin-bottom: 4px; font-size: 0.85rem; }
