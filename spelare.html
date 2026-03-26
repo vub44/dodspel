@@ -175,6 +175,12 @@
             border: 1px solid #222;
         }
         .log-entry { padding: 6px; border-bottom: 1px solid #111; display: flex; justify-content: space-between; font-size: 0.9rem; }
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem !important; }
+            .grid-3 { grid-template-columns: 1fr; } /* Namn, Släkte, Yrke staplas på höjden på mobil */
+            .derived-stats { justify-content: center; }
+            .derived-box { min-width: 45%; } /* KP/VP-rutorna hamnar två och två */
+        }
     </style>
 </head>
 <body>
