@@ -31,16 +31,28 @@
         .room-header { height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; cursor: pointer; }
         
         .container {
-            max-width: 900px; margin: 20px auto 200px auto; 
-            background: var(--card-bg); border: 1px solid var(--accent-color);
-            border-radius: 12px; padding: 25px; box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            max-width: 900px; 
+            margin: 20px auto 180px auto; 
+            background: var(--card-bg); 
+            border: 1px solid var(--accent-color);
+            border-radius: 12px; 
+            padding: 15px; /* Lite mindre padding på mobil */
+            backdrop-filter: blur(8px);
+            word-wrap: break-word;
+            overflow-x: hidden; /* Förbjuder sidoscroll på hela containern */
         }
 
         .section { background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid var(--accent-color); }
         h3 { color: var(--accent-color); margin-top: 0; font-size: 0.9rem; text-transform: uppercase; border-bottom: 1px solid #444; padding-bottom: 5px; }
 
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+        .grid-6 { 
+            display: grid; 
+            /* Denna rad säger: Skapa så många kolumner som får plats, 
+               men de får aldrig vara smalare än 100px styck */
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
+            gap: 10px; 
+        }
 
         input[type="text"], input[type="number"], textarea { 
             background: #1a1a1a; border: 1px solid #333; color: white; padding: 10px; border-radius: 4px; width: 100%; 
