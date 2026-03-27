@@ -108,27 +108,101 @@
         .add-btn:hover { opacity: 0.9; transform: translateY(-2px); }
 
         /* TÄRNINGSPANEL */
+        /* --- NY TÄRNINGSPANEL / FLIKAR (Från spelare.html) --- */
         .dice-tray {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: rgba(10, 10, 10, 0.98); border-top: 2px solid var(--accent-color);
-            padding: 12px; display: flex; flex-direction: column; align-items: center;
-            z-index: 2000; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0;
+            height: 320px; /* Fast höjd */
+            background: rgba(15, 15, 15, 0.98); 
+            border-top: 2px solid var(--accent-color);
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            z-index: 2000; 
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
         }
-        .dice-tray.minimized { transform: translateY(calc(100% - 2px)); }
-        .dice-toggle {
-            background: var(--accent-color); color: white; width: 50px; height: 20px;
-            position: absolute; top: -20px; right: 20px; border-radius: 8px 8px 0 0;
-            display: flex; justify-content: center; align-items: center; cursor: pointer;
-        }
-        .dice-log { font-size: 0.75rem; color: #888; margin-bottom: 5px; height: 18px; }
-        .dice-result-big { font-size: 1.6rem; font-weight: bold; color: var(--accent-color); margin-bottom: 12px; }
-        .dice-buttons { display: flex; gap: 8px; width: 100%; max-width: 500px; }
-        .dice-btn { background: #222; border: 1px solid var(--accent-color); color: white; padding: 12px; border-radius: 8px; cursor: pointer; flex: 1; font-weight: bold; }
+        .dice-tray.minimized { transform: translateY(100%); }
 
-        #all-npcs-arrow, #condition-arrow, .npc-arrow {
-            display: inline-block;
-            transition: transform 0.2s ease;
+        .tray-tabs {
+            position: absolute; 
+            top: -34px; 
+            left: 0; 
+            right: 0;
+            display: flex; 
+            justify-content: center; 
+            gap: 4px; 
+            pointer-events: none;
         }
+        .tray-tab {
+            background: #111; 
+            color: #777; 
+            padding: 8px 16px; 
+            border: 2px solid var(--accent-color); 
+            border-bottom: none; 
+            border-radius: 8px 8px 0 0; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 0.7rem;
+            pointer-events: auto; 
+            transition: 0.2s;
+            margin-bottom: -2px; 
+        }
+        .tray-tab.active { 
+            background: var(--accent-color); 
+            color: white; 
+        }
+
+        .tab-content { 
+            display: none; 
+            width: 100%; 
+            max-width: 600px; 
+            height: 100%; 
+            overflow-y: auto; 
+        }
+        
+        .tab-content.active { 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        .dice-result-big { font-size: 2.2rem; font-weight: bold; color: var(--accent-color); text-align: center; margin-bottom: 15px; min-height: 50px; }
+        .dice-buttons { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
+            width: 100%; 
+            padding: 10px 0;
+        }
+        
+        .dice-btn { 
+            background: #222; 
+            border: 1px solid var(--accent-color); 
+            color: white; 
+            padding: 15px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+        }
+        .dice-btn:hover { background: var(--accent-color); color: black; }
+        .dice-btn:active { transform: scale(0.95); }
+
+        .log-container { 
+            width: 100%; 
+            flex-grow: 1; 
+            height: 200px; 
+            overflow-y: auto; 
+            background: #000; 
+            padding: 10px; 
+            border-radius: 5px; 
+            border: 1px solid #222;
+        }
+        .log-entry { padding: 6px; border-bottom: 1px solid #111; display: flex; justify-content: space-between; font-size: 0.9rem; color: #f0f0f0;}
     </style>
 </head>
 <body>
@@ -215,23 +289,32 @@
 
     </div>
 
-    <div class="dice-tray minimized" id="diceTray">
-        <div class="dice-toggle" onclick="toggleDice()">▲</div>
-        <div id="dice-history" class="dice-log">Logg: Tom...</div>
-        <div id="dice-result" class="dice-result-big">Klar att slå</div>
-    
-        <div style="margin-bottom: 10px; font-size: 0.8rem; color: #aaa; display: flex; align-items: center; gap: 8px;">
-            <input type="checkbox" id="secretRoll" style="accent-color: var(--accent-color); cursor: pointer;">
-            <label for="secretRoll" style="cursor: pointer;">Hemligt 🤫</label>
+    <div class="dice-tray minimized" id="actionTray">
+        <div class="tray-tabs">
+            <div class="tray-tab" id="tab-btn-dice" onclick="toggleTray('dice')">🎲 TÄRNINGAR</div>
+            <div class="tray-tab" id="tab-btn-log" onclick="toggleTray('log')">📜 LOGG</div>
         </div>
     
-        <div class="dice-buttons">
-            <button class="dice-btn" onclick="rollDice(4)">T4</button>
-            <button class="dice-btn" onclick="rollDice(6)">T6</button>
-            <button class="dice-btn" onclick="rollDice(8)">T8</button>
-            <button class="dice-btn" onclick="rollDice(10)">T10</button>
-            <button class="dice-btn" onclick="rollDice(12)">T12</button>
-            <button class="dice-btn" onclick="rollDice(20)">T20</button>
+        <div id="content-dice" class="tab-content">
+            <div id="dice-result" class="dice-result-big">Klar</div>
+            
+            <div style="margin-bottom: 10px; font-size: 0.8rem; color: #aaa; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <input type="checkbox" id="secretRoll" style="accent-color: var(--accent-color); cursor: pointer;">
+                <label for="secretRoll" style="cursor: pointer;">🤫 Dölj slaget för spelarna (Hemligt)</label>
+            </div>
+
+            <div class="dice-buttons">
+                <button class="dice-btn" onclick="rollDice(4)">T4</button>
+                <button class="dice-btn" onclick="rollDice(6)">T6</button>
+                <button class="dice-btn" onclick="rollDice(8)">T8</button>
+                <button class="dice-btn" onclick="rollDice(10)">T10</button>
+                <button class="dice-btn" onclick="rollDice(12)">T12</button>
+                <button class="dice-btn" onclick="rollDice(20)">T20</button>
+            </div>
+        </div>
+    
+        <div id="content-log" class="tab-content">
+            <div id="dice-history-list" class="log-container"></div>
         </div>
     </div>
 
@@ -278,12 +361,19 @@
                 userListDiv.innerHTML = "Anslutna: " + users.map(u => `<span class="user-badge" style="display:inline-block; background:#222; padding:2px 8px; border-radius:10px; margin:2px; border:1px solid #444; color:#4ca300; font-size:0.8rem;">${u}</span>`).join('');
             });
     
-            // 3. Lyssna på alla tärningsslag i rummet
+            // 3. Lyssna på alla tärningsslag i rummet och rita upp i loggen
             const rollsRef = ref(db, `rooms/${room}/rolls`);
             onChildAdded(rollsRef, (snapshot) => {
-                const data = snapshot.val();
-                diceLog.innerText = `Logg: ${data.user} slog ${data.dice}`;
-                diceResult.innerText = `${data.user}: ${data.val}`;
+                const d = snapshot.val();
+                
+                // Visa senaste slaget stort i tärningsvyn
+                document.getElementById('dice-result').innerText = `${d.user}: ${d.val}`;
+                
+                // Skapa rad i logg-vyn (precis som i spelare.html)
+                const entry = document.createElement('div');
+                entry.className = 'log-entry';
+                entry.innerHTML = `<span>${d.user} (T${d.dice.replace('T', '')})</span><strong>${d.val}</strong>`;
+                document.getElementById('dice-history-list').prepend(entry);
             });
             const playersRef = ref(db, `rooms/${room}/sheets`);
             onValue(playersRef, (snapshot) => {
@@ -350,19 +440,23 @@
         window.rollDice = function(sides) {
             const room = document.getElementById('roomName').value.trim();
             const isSecret = document.getElementById('secretRoll').checked;
-            
-            // Generera resultatet
             const result = Math.floor(Math.random() * sides) + 1;
             const diceType = `T${sides}`;
-        
+    
+            const diceResult = document.getElementById('dice-result');
+    
             if (isSecret) {
-                // LOKALT SLAG: Uppdatera bara din skärm
-                diceLog.innerText = `Logg: (HEMLIGT) Du slog ${diceType}`;
+                // LOKALT SLAG: Skicka INTE till firebase, men lägg till i din flik-logg!
                 diceResult.innerText = `Hemligt: ${result}`;
-                diceResult.style.color = "#ffcc00"; // Gul färg för att påminna om att det är dolt
+                diceResult.style.color = "#ffcc00"; 
+                
+                const entry = document.createElement('div');
+                entry.className = 'log-entry';
+                entry.style.color = "#ffcc00";
+                entry.innerHTML = `<span>🤫 Spelledaren (Hemligt)</span><strong>${result}</strong>`;
+                document.getElementById('dice-history-list').prepend(entry);
             } else {
-                // OFFENTLIGT SLAG: Skicka till Firebase
-                if (!document.getElementById('connectionStatus').innerText.includes("Hanterar")) {
+                if (!document.getElementById('connectionStatus').innerText.includes("🟢")) {
                     return alert("Anslut till ett rum först!");
                 }
                 
@@ -374,6 +468,7 @@
                     timestamp: serverTimestamp()
                 });
             }
+            document.getElementById('secretRoll').checked = false; // Rensa bocken efter slag
         };
         window.toggleSection = function(contentId, arrowId) {
             const content = document.getElementById(contentId);
@@ -460,7 +555,20 @@
             hpInput.value = currentVal + amount;
         };
     
-        window.toggleDice = () => document.getElementById('diceTray').classList.toggle('minimized');
+        window.toggleTray = (t) => {
+            const tray = document.getElementById('actionTray');
+            const content = document.getElementById('content-'+t);
+            const alreadyOpen = !tray.classList.contains('minimized') && content.classList.contains('active');
+    
+            if (alreadyOpen) {
+                tray.classList.add('minimized');
+            } else {
+                document.querySelectorAll('.tab-content, .tray-tab').forEach(el => el.classList.remove('active'));
+                content.classList.add('active');
+                document.getElementById('tab-btn-'+t).classList.add('active');
+                tray.classList.remove('minimized');
+            }
+        };
         // Funktion för att radera och sen spara om listan
         window.removeNPC = function(npcId) {
             document.getElementById(npcId).remove();
